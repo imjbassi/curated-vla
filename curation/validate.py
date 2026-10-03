@@ -76,14 +76,17 @@ def main() -> None:
     df["flag_idle_start"] = df["idle_start_s"] > 3.0
     df["flag_idle_end"] = df["idle_end_s"] > 3.0
 
-    # population weights: stratum = (source, flag_any)
+    # Population weights. The sample over-represents flagged episodes and, within
+    # them, rare detectors, so strata are (source, exact combination of flags).
     df["w"] = 1.0
     if args.scores:
-        pop = pd.read_parquet(args.scores, columns=["source", "flag_any"])
-        pop_share = pop.groupby(["source", "flag_any"]).size() / pop.groupby("source").size()
-        samp_share = df.groupby(["source", "flag_any"]).size() / df.groupby("source").size()
-        ratio = (pop_share / samp_share).rename("w")
-        df = df.drop(columns="w").join(ratio, on=["source", "flag_any"])
+        flags = ["flag_idle", "flag_truncation", "flag_spike", "flag_flailing"]
+        pop = pd.read_parquet(args.scores, columns=["source", *flags])
+        sig = lambda d: d["source"] + ":" + d[flags].astype(int).astype(str).agg("".join, axis=1)
+        pop_share = sig(pop).value_counts() / len(pop)
+        df["stratum"] = sig(df)
+        samp_share = df["stratum"].value_counts() / len(df)
+        df["w"] = (df["stratum"].map(pop_share) / df["stratum"].map(samp_share)).fillna(0.0)
 
     rows = [dict(detector=f, label=l, **evaluate(df, f, f"lab_{l}")) for f, l in PAIRS.items()]
     rows.append(dict(detector="flag_any", label="any problem or failed", **evaluate(df, "flag_any", "lab_bad")))

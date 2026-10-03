@@ -4,7 +4,8 @@ Sample design (blind validation of the detectors):
   - equal episodes per source;
   - within a source, half drawn from episodes any detector flagged and half from
     unflagged ones, so both precision and recall can be estimated (reweight by
-    the true flag rate when reporting population numbers);
+    the true flag rate when reporting population numbers); the flagged half is
+    spread round-robin across the detectors that fire in that source;
   - order shuffled; detector outputs are NOT written to the labeling manifest.
 
 Usage:
@@ -44,11 +45,27 @@ def draw_sample(scores: pd.DataFrame, n: int) -> pd.DataFrame:
     picks = []
     for s in sources:
         g = scores[scores["source"] == s]
-        flagged, clean = g[g["flag_any"]], g[~g["flag_any"]]
-        k_flag = min(per_source // 2, len(flagged))
-        k_clean = min(per_source - k_flag, len(clean))
-        picks += [flagged.sample(k_flag, random_state=SEED), clean.sample(k_clean, random_state=SEED)]
+        clean = g[~g["flag_any"]]
+        k_flag = min(per_source // 2, int(g["flag_any"].sum()))
+        # Spread the flagged half across detectors that fire in this source, so rare
+        # detectors (spike, flailing) get enough positives to estimate precision.
+        detectors = [c for c in DETECTOR_FLAGS if g[c].any()]
+        chosen: list = []
+        i = 0
+        while len(chosen) < k_flag and detectors:
+            c = detectors[i % len(detectors)]
+            pool = g[g[c] & ~g.index.isin(chosen)]
+            if pool.empty:
+                detectors.remove(c)
+                continue
+            chosen.append(pool.sample(1, random_state=SEED + len(chosen)).index[0])
+            i += 1
+        k_clean = min(per_source - len(chosen), len(clean))
+        picks += [g.loc[chosen], clean.sample(k_clean, random_state=SEED)]
     return pd.concat(picks).sample(frac=1, random_state=SEED).reset_index(drop=True)
+
+
+DETECTOR_FLAGS = ["flag_idle", "flag_truncation", "flag_spike", "flag_flailing"]
 
 
 
