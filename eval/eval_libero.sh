@@ -3,7 +3,7 @@
 # 4 suites x 10 tasks x 10 episodes, hard resets, one task at a time.
 #
 # Usage:
-#   eval/eval_libero.sh [POLICY] [SEED] [SUITES] [N_EPISODES]
+#   eval/eval_libero.sh [POLICY] [SEED] [SUITES] [N_EPISODES] [extra lerobot-eval args...]
 #   eval/eval_libero.sh HuggingFaceVLA/smolvla_libero 1000
 #   eval/eval_libero.sh HuggingFaceVLA/smolvla_libero 1000 libero_object 1   # smoke test
 #
@@ -18,6 +18,7 @@ POLICY="${1:-HuggingFaceVLA/smolvla_libero}"
 SEED="${2:-1000}"
 SUITES="${3:-libero_spatial,libero_object,libero_goal,libero_10}"
 N_EPISODES="${4:-10}"
+shift $(( $# < 4 ? $# : 4 ))  # anything after the 4 positionals goes to lerobot-eval
 BATCH_SIZE="${BATCH_SIZE:-$N_EPISODES}"
 EXTRA_ARGS=()
 if [ -n "${TASK_IDS:-}" ]; then
@@ -29,7 +30,7 @@ CVLA_HOME="${CVLA_HOME:-$HOME/cvla}"
 source "$CVLA_HOME/venv/bin/activate"
 export MUJOCO_GL="${MUJOCO_GL:-egl}"
 
-RUN_NAME="$(basename "$POLICY")_seed${SEED}_$(date +%Y%m%d-%H%M%S)"
+RUN_NAME="$(basename "$POLICY")${TAG:+_$TAG}_seed${SEED}_$(date +%Y%m%d-%H%M%S)"
 OUT="$CVLA_HOME/outputs/eval/$RUN_NAME"
 mkdir -p "$OUT"
 
@@ -44,6 +45,7 @@ lerobot-eval \
     --seed="$SEED" \
     --output_dir="$OUT" \
     "${EXTRA_ARGS[@]}" \
+    "$@" \
     2>&1 | tee "$OUT/eval.log"
 
 echo "Results in $OUT"

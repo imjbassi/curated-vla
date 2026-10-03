@@ -20,6 +20,7 @@ lerobot-train \
     --policy.load_vlm_weights=true \
     --policy.push_to_hub=false \
     --dataset.repo_id=lerobot/libero \
+    --dataset.revision="${LIBERO_REVISION:-a1aaacb7f6cd6ee5fb43120f673cebb0cfea7dd4}" \
     --dataset.video_backend=pyav \
     --batch_size="$BATCH_SIZE" \
     --steps="$STEPS" \
