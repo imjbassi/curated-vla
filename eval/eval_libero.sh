@@ -12,6 +12,8 @@
 # with the same seed see the same initial states. TASK_IDS restricts to e.g. "[0]".
 # Envs run in one process by default (ASYNC_ENVS=false): each async worker costs
 # ~2 GB RAM, and policy inference, not simulation, is the bottleneck anyway.
+# Cameras render at RES x RES (default 256, the LIBERO training-data resolution).
+# LeRobot's own default of 360 cost ~7 pp on LIBERO-Object; see docs/phase0.md.
 set -euo pipefail
 
 POLICY="${1:-HuggingFaceVLA/smolvla_libero}"
@@ -42,6 +44,8 @@ lerobot-eval \
     --eval.use_async_envs="${ASYNC_ENVS:-false}" \
     --eval.n_episodes="$N_EPISODES" \
     --env.max_parallel_tasks=1 \
+    --env.observation_height="${RES:-256}" \
+    --env.observation_width="${RES:-256}" \
     --seed="$SEED" \
     --output_dir="$OUT" \
     "${EXTRA_ARGS[@]}" \

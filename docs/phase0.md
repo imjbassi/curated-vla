@@ -39,14 +39,18 @@ The paper's own ablation (Table 13) reports ~80–83% average at 1–10 action s
 |---|---|---|
 | none (`n_action_steps=1`) | 81 | ~55 min |
 | `n_action_steps=10` | 79 | not the cause; GPU idle, rendering-bound |
-| MuJoCo 3.3.2 | running | |
+| MuJoCo 3.3.2 | 84 | within noise of 81 (binomial SE ≈ 4 pp at n=100) |
+| render 256×256 | **88** | largest single effect; matches training-data resolution |
+| MuJoCo 3.3.2 + render 256×256 | 88 | MuJoCo version has no effect |
+
+**Conclusion:** render resolution was the main cause. At 256×256 we get 88% on Object vs the community's 93% (difference ≈ 1.2 SE, not significant). `eval/eval_libero.sh` now renders at 256×256 by default. The paper's 96% remains ~2.4 SE above us; consistent with the paper's own Table 13 showing lower numbers than its headline table.
 
 Ruled out by inspection: images not flipped (rollout videos look correct, policy targets the right objects); batching.
 
-Remaining suspects:
+Background on suspects:
+- **Render resolution**: LeRobot's LIBERO env rendered at 256×256 when this checkpoint was made (Sept 2025); since [0699b46d](https://github.com/huggingface/lerobot/commit/0699b46d) (Oct 2025) it renders at 360×360 (also in 0.5.1). Training data is 256×256.
 - **MuJoCo version** (3.8.1 vs community 3.3.2): contact physics changes across versions.
-- **Render resolution**: LeRobot's LIBERO env rendered at 256×256 when this checkpoint was made (Sept 2025); since [0699b46d](https://github.com/huggingface/lerobot/commit/0699b46d) (Oct 2025) it renders at 360×360. Training data is 256×256. Test with `--env.observation_height=256 --env.observation_width=256`.
-- LeRobot env changes after 0.5.1: fps plumbing (#4124), reset-on-termination (#4273), env lifecycle (#4194).
+- LeRobot env changes after 0.5.1: fps plumbing (#4124, default 30 → 20), reset-on-termination (#4273), env lifecycle (#4194). A LeRobot 0.5.1 + MuJoCo 3.3.2 environment is built for an exact community-config comparison.
 
 ## Eval speed (RTX 4070, llvmpipe rendering)
 
@@ -58,8 +62,26 @@ Remaining suspects:
 
 ## Training throughput
 
-TBD (GPU busy with eval diagnosis)
+`scripts/measure_throughput.sh`: SmolVLA from `SmolVLM2-500M-Instruct` weights (`--policy.type=smolvla --policy.load_vlm_weights=true`), default `train_expert_only=true` (100M of 450M params trainable), on `lerobot/libero` @ `a1aaacb`, 8 dataloader workers, pyav decoding.
+
+| Setting | Samples/s | Torch mem | Notes |
+|---|---|---|---|
+| batch 32, fp32 | **54** | 6.7 GB | data_s ≈ 0.005 s/step: GPU-bound, not data-bound |
+| batch 64, fp32 | ~12 | >12 GB | spills past VRAM into shared system memory; unusable |
+| `--policy.use_amp=true` | n/a | | crashes in LeRobot 0.6.1: `_amp_foreach_non_finite_check_and_unscale_cuda not implemented for 'BFloat16'` |
+
+So the local ceiling is **~54 samples/s ≈ 4.7M samples/day**. Fixing AMP (bf16) is the obvious speedup to try in Phase 2.
 
 ## Compute estimate
 
-TBD
+| Job | Samples | Local (4070) |
+|---|---|---|
+| SmolVLA paper pretraining (200k steps × 256) | 51.2M | ~11 days per run: **not feasible locally** |
+| SmolVLA paper LIBERO post-training (100k × 64) | 6.4M | ~33 h |
+| Reduced post-training (30k × 32) | ~1M | ~5 h |
+| Proposed pretraining budget per condition | 5M (~0.5 epoch of the 10.6M-frame community pool) | ~26 h |
+| LIBERO eval, full protocol, one seed | 400 episodes | ~4 h |
+
+Per curation condition (1 pretrain + 3 post-train seeds + 3 evals): ~26 + 15 + 12 ≈ **53 GPU-hours**. Conditions A and B ≈ 4.5 days; adding C ≈ 6.5 days of uninterrupted GPU time; Phase 4 ablations add ~2 days each.
+
+**Recommendation:** keep everything local at the 5M-sample pretraining budget; that fits the Weeks 4–8 schedule. Rent cloud GPUs only if we want a larger pretraining budget (paper scale on a single H100 would be roughly 1.5–2 days per run, ≈ $100–150 per run at current on-demand prices; verify before booking). Before committing, try to (a) fix bf16 AMP and (b) move rendering to the GPU (`GALLIUM_DRIVER=d3d12`) to cut eval time.
