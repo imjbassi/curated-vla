@@ -1,4 +1,4 @@
-"""Draw the hand-labeling sample and cut one video clip per episode.
+﻿"""Draw the hand-labeling sample and cut one video clip per episode.
 
 Sample design (blind validation of the detectors):
   - equal episodes per source;
@@ -21,12 +21,24 @@ from pathlib import Path
 import pandas as pd
 from huggingface_hub import hf_hub_download
 
+from curation.cameras import main_camera
 from curation.datasets import BY_NAME
 
 SEED = 1000
 
 
+NO_VIDEO_SUBSETS = {
+    # community_v2 sub-dataset with tabular data but no video files on the Hub (774 episodes)
+    ("community_v2", "Yotofu/so100_sweeper_shoes"),
+}
+
+
+def has_video(scores: pd.DataFrame) -> pd.Series:
+    return ~pd.Series(list(zip(scores["source"], scores["subset"])), index=scores.index).isin(NO_VIDEO_SUBSETS)
+
+
 def draw_sample(scores: pd.DataFrame, n: int) -> pd.DataFrame:
+    scores = scores[has_video(scores)]
     sources = sorted(scores["source"].unique())
     per_source = n // len(sources)
     picks = []
@@ -39,19 +51,13 @@ def draw_sample(scores: pd.DataFrame, n: int) -> pd.DataFrame:
     return pd.concat(picks).sample(frac=1, random_state=SEED).reset_index(drop=True)
 
 
-def _first_video_key(info: dict) -> str:
-    keys = [k for k, v in info["features"].items() if v["dtype"] == "video"]
-    # prefer a third-person view over wrist cameras
-    keys.sort(key=lambda k: ("wrist" in k or "hand" in k, k))
-    return keys[0]
-
 
 def clip_episode(row: pd.Series, out_dir: Path) -> Path:
     """Fetch the episode's main-camera video and cut it to out_dir/<id>.mp4 (H.264, browser-playable)."""
     src = BY_NAME[row["source"]]
     prefix = f"{row['subset']}/" if row["subset"] else ""
     info = json.loads(Path(hf_hub_download(src.repo_id, f"{prefix}meta/info.json", repo_type="dataset")).read_text())
-    key = _first_video_key(info)
+    key = main_camera(info, src.repo_id, row["subset"])
     ep = int(row["episode_index"])
     out = out_dir / f"{row['label_id']}.mp4"
     if out.exists():

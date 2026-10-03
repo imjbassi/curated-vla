@@ -1,4 +1,4 @@
-"""Extract a few key frames per episode (main camera) for the VLM success judge.
+﻿"""Extract a few key frames per episode (main camera) for the VLM success judge.
 
 Streams videos: for per-episode files (v2.1 community datasets) each video is
 downloaded, sampled, and deleted, so disk use stays small even though the full
@@ -24,7 +24,8 @@ import pandas as pd
 from huggingface_hub import hf_hub_download
 
 from curation.datasets import BY_NAME
-from curation.sample_for_labeling import _first_video_key
+from curation.cameras import main_camera
+from curation.sample_for_labeling import has_video
 
 POSITIONS = {"first": 0.0, "mid": 0.5, "last": 1.0}
 
@@ -44,7 +45,7 @@ def extract_subset(source: str, subset: str, episodes: list[int], out_root: Path
     src = BY_NAME[source]
     prefix = f"{subset}/" if subset else ""
     info = json.loads(Path(hf_hub_download(src.repo_id, f"{prefix}meta/info.json", repo_type="dataset")).read_text())
-    key = _first_video_key(info)
+    key = main_camera(info, src.repo_id, subset)
     out_dir = out_root / source / (subset or "_")
     out_dir.mkdir(parents=True, exist_ok=True)
     done = 0
@@ -84,11 +85,15 @@ def main() -> None:
     parser.add_argument("--sources", nargs="*")
     args = parser.parse_args()
     df = pd.read_parquet(args.scores, columns=["source", "subset", "episode_index"])
+    df = df[has_video(df)]
     if args.sources:
         df = df[df["source"].isin(args.sources)]
     for (source, subset), g in df.groupby(["source", "subset"], sort=False):
-        n = extract_subset(source, subset, sorted(g["episode_index"].tolist()), args.out)
-        print(f"{source}/{subset or '_'}: {n} episodes", flush=True)
+        try:
+            n = extract_subset(source, subset, sorted(g["episode_index"].tolist()), args.out)
+            print(f"{source}/{subset or '_'}: {n} episodes", flush=True)
+        except Exception as e:  # one broken sub-dataset should not stop the run
+            print(f"FAILED {source}/{subset or '_'}: {type(e).__name__}: {str(e)[:200]}", flush=True)
 
 
 if __name__ == "__main__":
