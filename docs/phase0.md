@@ -19,6 +19,7 @@ Setup: `bash scripts/setup_wsl.sh` (needs `sudo apt-get install -y ffmpeg git-lf
 ### Gotchas hit
 
 - **LIBERO prompts on first import** for a dataset path, which crashes non-interactive evals with `EOFError`. `setup_wsl.sh` pre-writes `~/.libero/config.yaml`.
+- **Sync batch 10 on LIBERO-Long OOM-kills WSL.** 10 LIBERO envs in one process, each with its own MuJoCo instance and llvmpipe renderer, reach ~15 GB on Long's larger scenes (~12 GB on Object). `run_protocol.sh` now runs each task in its own process, and Long uses `BATCH_SIZE=5` (peak ~9.5 GB). Raising the WSL memory cap in `%USERPROFILE%\.wslconfig` (host has 31 GB) would allow batch 10 again.
 - **Async env workers cost ~2 GB RAM each.** `--eval.batch_size=10` with async envs OOM-killed WSL at 15.5 GB. Sync vector envs (`--eval.use_async_envs=false`) batch policy inference in one process and fit comfortably. Batching does not change results (task 0 of Object: 6/10 batched vs 5/10 serial).
 - **EGL in WSL falls back to CPU rendering** (llvmpipe). Mesa's D3D12 driver renders on the GPU: `GALLIUM_DRIVER=d3d12 MESA_D3D12_DEFAULT_ADAPTER_NAME=NVIDIA` (without the adapter name it picks the Ryzen iGPU). Not yet adopted for evals; pixel output may differ slightly from llvmpipe.
 - **The published checkpoint replans every step** (`n_action_steps=1`, 10 flow-matching steps). This matches the paper's simulation protocol ("predicting a new action after each executed action").
@@ -29,7 +30,7 @@ Setup: `bash scripts/setup_wsl.sh` (needs `sudo apt-get install -y ffmpeg git-lf
 |---|---|---|---|---|---|
 | SmolVLA (0.45B), paper Table 2 | 90 | 96 | 92 | 71 | 87.3 |
 | Community, same checkpoint, LeRobot 0.5.1, MuJoCo 3.3.2, `n_action_steps=10` ([lerobot#3264](https://github.com/huggingface/lerobot/issues/3264)) | 63 | 93 | 81 | 56 | 73.3 |
-| Ours, LeRobot 0.6.1, MuJoCo 3.8.1, `n_action_steps=1` (checkpoint default), seed 1000 | | 81 | | | |
+| Ours, LeRobot 0.6.1, render 256×256, `n_action_steps=1` (checkpoint default), seed 1000 | 75 | 90 | 78 | running | |
 
 The paper's own ablation (Table 13) reports ~80–83% average at 1–10 action steps, below the 87.3 headline, so the headline is likely not reachable from the public checkpoint. Our target is to match the community reproduction on the same checkpoint.
 
