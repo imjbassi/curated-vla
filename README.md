@@ -32,7 +32,7 @@ Quality detectors target four failure modes: **truncation**, **idle time**, **fl
 
 | Phase | Weeks | Milestone | Status |
 |---|---|---|---|
-| 0 | 1 | Environment works, published SmolVLA LIBERO numbers reproduced, compute estimated | ⏳ |
+| 0 | 1 | Environment works, published SmolVLA LIBERO numbers reproduced, compute estimated | ✅ [report](docs/phase0.md): 72.2% avg, matches community reproduction; paper's 87.3% not reached |
 | 1 | 2–3 | Data audited, quality detectors validated | ⏳ |
 | 2 | 4–5 | Baseline model pretrained, post-trained, benchmarked | ⏳ |
 | 3 | 6–8 | Curated vs random results | ⏳ |

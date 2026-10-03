@@ -1,6 +1,15 @@
 # Phase 0: Setup and reproduction
 
-Status: in progress (started 2026-10-02). **Gate not yet passed**: our LIBERO numbers for the public SmolVLA checkpoint are below published ones; diagnosis below.
+Status: complete (2026-10-02 → 2026-10-03), one eval seed.
+
+## Summary
+
+- **Eval pipeline matches an independent reproduction** of the public `HuggingFaceVLA/smolvla_libero` checkpoint: **72.2%** average vs the community's 73.3%. It does **not** reach the SmolVLA paper's 87.3%; the community run and the paper's own ablation table both indicate that gap lies in the public checkpoint vs paper, not in our eval.
+- **One real eval bug found and fixed:** current LeRobot renders LIBERO cameras at 360×360, but the checkpoint and dataset are 256×256. Rendering at 256 raised LIBERO-Object from 81% to 88–90%.
+- **Training:** 54 samples/s at batch 32 (fp32, VLM frozen) on the 4070; batch 64 does not fit; bf16 AMP is broken in LeRobot 0.6.1.
+- **Compute:** paper-scale pretraining (~11 days per run) is not feasible locally; a 5M-sample pretraining budget (~26 h per run, ~53 GPU-hours per curation condition) is.
+
+**Gate decision (pending):** treat matching the community reproduction as passing, or additionally reproduce LIBERO post-training ourselves from `smolvla_base` (~33 h at the paper recipe) before Phase 1.
 
 ## Environment
 
@@ -30,9 +39,22 @@ Setup: `bash scripts/setup_wsl.sh` (needs `sudo apt-get install -y ffmpeg git-lf
 |---|---|---|---|---|---|
 | SmolVLA (0.45B), paper Table 2 | 90 | 96 | 92 | 71 | 87.3 |
 | Community, same checkpoint, LeRobot 0.5.1, MuJoCo 3.3.2, `n_action_steps=10` ([lerobot#3264](https://github.com/huggingface/lerobot/issues/3264)) | 63 | 93 | 81 | 56 | 73.3 |
-| Ours, LeRobot 0.6.1, render 256×256, `n_action_steps=1` (checkpoint default), seed 1000 | 75 | 90 | 78 | running | |
+| **Ours**, LeRobot 0.6.1, render 256×256, `n_action_steps=1` (checkpoint default), seed 1000 | **75** | **90** | **78** | **46** | **72.2** |
 
-The paper's own ablation (Table 13) reports ~80–83% average at 1–10 action steps, below the 87.3 headline, so the headline is likely not reachable from the public checkpoint. Our target is to match the community reproduction on the same checkpoint.
+Per-suite vs community: Spatial +12, Object −3, Goal −3, Long −10 (binomial SE ≈ 4–5 pp per suite at n=100, so only Spatial and Long differ by more than ~2 SE, in opposite directions). Long was run at batch 5 (OOM at batch 10, see above); other suites at batch 10.
+
+The paper's own ablation (Table 13) reports ~80–83% average at 1–10 action steps, below the 87.3 headline, so the headline is likely not reachable from the public checkpoint.
+
+Per-task success (%), seed 1000:
+
+| Suite | t0 | t1 | t2 | t3 | t4 | t5 | t6 | t7 | t8 | t9 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Object | 70 | 100 | 90 | 100 | 90 | 70 | 100 | 90 | 100 | 90 |
+| Spatial | 60 | 80 | 100 | 70 | 70 | 80 | 70 | 90 | 60 | 70 |
+| Goal | 90 | 90 | 90 | 40 | 90 | 80 | 80 | 100 | 80 | 40 |
+| Long | 10 | 40 | 50 | 100 | 0 | 100 | 70 | 30 | 30 | 30 |
+
+Reproduce: `bash eval/run_protocol.sh HuggingFaceVLA/smolvla_libero 1000` (set `BATCH_SIZE=5` unless WSL has >16 GB RAM).
 
 ## Diagnosis log (LIBERO-Object, 100 episodes, seed 1000)
 
