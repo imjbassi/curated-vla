@@ -11,6 +11,21 @@ Status: complete (2026-10-02 → 2026-10-03), one eval seed.
 
 **Gate decision (2026-10-03): passed.** Matching the community reproduction verifies the evaluation harness, which is what the gate is for. Conditions: (1) README states the paper vs community gap; (2) the training pipeline is verified by a short sanity run now and by a `smolvla_base` LIBERO post-training control in Phase 2, with a stop-and-debug rule before Phase 3.
 
+## Training sanity check (2026-10-03)
+
+`bash scripts/sanity_train.sh 3000 32`: post-train `lerobot/smolvla_base` on `lerobot/libero` @ `a1aaacb` for 3,000 steps × batch 32 (~1.5% of the paper's 100k × 64 recipe), then load the final checkpoint into `eval/eval_libero.sh`.
+
+| Check | Result |
+|---|---|
+| Loss decreases normally | 1.87 (step 50) → 1.00 (100) → 0.71 (300) → 0.54 (950) → ~0.46 (3,000); smooth, no spikes |
+| Checkpoints save | `checkpoints/001500`, `checkpoints/003000`, `last` |
+| Checkpoint loads into eval harness | yes, runs closed-loop with no errors |
+| Policy has learned something | LIBERO-Object tasks 0–1, 20 episodes: **50% success** |
+
+One fix was needed: `smolvla_base` names its cameras `camera1..3`, LIBERO provides `image` / `image2`. Both training and eval pass `--rename_map` (image→camera1, image2→camera2); providing a subset of the policy's cameras is allowed. Phase 2 must use the same mapping for the `smolvla_base` control and our own models.
+
+The full verification is the Phase 2 control (post-train `smolvla_base` with our baseline settings and compare to published numbers).
+
 ## Environment
 
 | Item | Value |
