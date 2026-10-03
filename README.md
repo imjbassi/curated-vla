@@ -41,6 +41,20 @@ Quality detectors target four failure modes: **truncation**, **idle time**, **fl
 
 Full plan: [docs/PLAN.md](docs/PLAN.md)
 
+### What Phase 0 matched
+
+The Phase 0 gate verifies the **evaluation harness**, by matching an independent reproduction of the public `HuggingFaceVLA/smolvla_libero` checkpoint. It does **not** match the SmolVLA paper.
+
+| LIBERO success % | Spatial | Object | Goal | Long | Avg |
+|---|---|---|---|---|---|
+| SmolVLA paper (0.45B, Table 2) | 90 | 96 | 92 | 71 | 87.3 |
+| Community reproduction, same public checkpoint ([lerobot#3264](https://github.com/huggingface/lerobot/issues/3264)) | 63 | 93 | 81 | 56 | 73.3 |
+| Ours, same public checkpoint, seed 1000 | 75 | 90 | 78 | 46 | 72.2 |
+| **Gap: community − paper** | −27 | −3 | −11 | −15 | **−14.0** |
+| **Gap: ours − community** | +12 | −3 | −3 | −10 | **−1.1** |
+
+The public checkpoint scores about 14 points below the paper's headline when others evaluate it too, so we treat that gap as belonging to the checkpoint/paper rather than our harness. (The paper's own ablation, Table 13, reports ~80–83% average.) **The training pipeline is verified separately in Phase 2**: we post-train `lerobot/smolvla_base` on LIBERO with our settings as a control, and stop to debug if it does not land near published numbers.
+
 ## Layout
 
 ```

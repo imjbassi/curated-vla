@@ -26,6 +26,8 @@ fi
 source "$VENV/bin/activate"
 
 uv pip install "lerobot[smolvla,libero]==${LEROBOT_VERSION}"
+# Phase 1 curation/audit tools
+uv pip install tabulate scikit-learn matplotlib
 
 # LIBERO asks interactively for a dataset path on first import, which crashes
 # non-interactive evals. Answer "n" once to write the default ~/.libero/config.yaml.

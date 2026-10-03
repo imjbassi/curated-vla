@@ -9,7 +9,7 @@ Status: complete (2026-10-02 → 2026-10-03), one eval seed.
 - **Training:** 54 samples/s at batch 32 (fp32, VLM frozen) on the 4070; batch 64 does not fit; bf16 AMP is broken in LeRobot 0.6.1.
 - **Compute:** paper-scale pretraining (~11 days per run) is not feasible locally; a 5M-sample pretraining budget (~26 h per run, ~53 GPU-hours per curation condition) is.
 
-**Gate decision (pending):** treat matching the community reproduction as passing, or additionally reproduce LIBERO post-training ourselves from `smolvla_base` (~33 h at the paper recipe) before Phase 1.
+**Gate decision (2026-10-03): passed.** Matching the community reproduction verifies the evaluation harness, which is what the gate is for. Conditions: (1) README states the paper vs community gap; (2) the training pipeline is verified by a short sanity run now and by a `smolvla_base` LIBERO post-training control in Phase 2, with a stop-and-debug rule before Phase 3.
 
 ## Environment
 

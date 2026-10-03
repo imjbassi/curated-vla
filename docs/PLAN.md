@@ -56,8 +56,9 @@ Verify current versions and docs for each before starting; this ecosystem moves 
 2. Pretrain on a random subset of the public data at a fixed, affordable size.
 3. Post-train on LIBERO's public demonstrations.
 4. Evaluate on LIBERO, closed-loop, multiple seeds.
+5. **Training-pipeline control:** post-train the published `lerobot/smolvla_base` on LIBERO with exactly the same post-training settings as our baseline, and evaluate it the same way. If it lands near the published LIBERO numbers (see README for the paper vs community-reproduction gap), the training pipeline is verified. **If not, stop and debug before any Phase 3 curation runs.**
 
-**Output:** our own robot foundation model with a real benchmark score.
+**Output:** our own robot foundation model with a real benchmark score, plus a verified training pipeline.
 
 ## Phase 3: Curation experiment (weeks 6–8)
 

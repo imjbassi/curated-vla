@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Episode Labeling</title>
+<style>
+  :root { --bg:#fafaf9; --fg:#1c1917; --muted:#78716c; --card:#fff; --line:#e7e5e4; --accent:#2563eb; --on:#dbeafe; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#1c1917; --fg:#f5f5f4; --muted:#a8a29e; --card:#292524; --line:#44403c; --accent:#60a5fa; --on:#1e3a5f; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:15px/1.45 system-ui, sans-serif; }
+  main { max-width: 980px; margin: 0 auto; padding: 16px; }
+  header { display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap; }
+  h1 { font-size:18px; margin:0; }
+  .muted { color:var(--muted); }
+  .bar { height:6px; background:var(--line); border-radius:3px; margin:8px 0 16px; overflow:hidden; }
+  .bar > div { height:100%; background:var(--accent); width:0; }
+  .grid { display:grid; grid-template-columns: minmax(0,1.6fr) minmax(0,1fr); gap:16px; }
+  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px; }
+  video { width:100%; border-radius:6px; background:#000; }
+  .task { font-size:17px; font-weight:600; margin:8px 0 2px; }
+  fieldset { border:0; padding:0; margin:0 0 12px; }
+  legend { font-weight:600; margin-bottom:6px; }
+  .opts { display:flex; gap:6px; flex-wrap:wrap; }
+  .opt { border:1px solid var(--line); border-radius:8px; padding:6px 10px; cursor:pointer; user-select:none; }
+  .opt.on { background:var(--on); border-color:var(--accent); }
+  kbd { font:12px ui-monospace, monospace; border:1px solid var(--line); border-radius:4px; padding:0 4px; color:var(--muted); }
+  textarea { width:100%; min-height:56px; background:var(--bg); color:var(--fg); border:1px solid var(--line); border-radius:8px; padding:6px; font:inherit; }
+  .nav { display:flex; gap:8px; margin-top:10px; }
+  button { font:inherit; padding:8px 14px; border-radius:8px; border:1px solid var(--line); background:var(--card); color:var(--fg); cursor:pointer; }
+  button.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .help { font-size:13px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Episode labeling <span class="muted" id="pos"></span></h1>
+    <span class="muted" id="done"></span>
+  </header>
+  <div class="bar"><div id="prog"></div></div>
+  <div class="grid">
+    <div class="card">
+      <video id="vid" controls autoplay muted playsinline></video>
+      <div class="task" id="task"></div>
+      <div class="muted" id="meta"></div>
+      <div class="help muted" style="margin-top:8px">
+        Speed: <kbd>[</kbd> slower <kbd>]</kbd> faster (<span id="rate">2</span>×) · <kbd>space</kbd> play/pause · <kbd>r</kbd> replay
+      </div>
+    </div>
+    <div class="card">
+      <fieldset>
+        <legend>Task completed?</legend>
+        <div class="opts" data-field="completed" data-single>
+          <span class="opt" data-v="yes"><kbd>1</kbd> yes</span>
+          <span class="opt" data-v="no"><kbd>2</kbd> no</span>
+          <span class="opt" data-v="unclear"><kbd>3</kbd> unclear</span>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Problems (any that apply)</legend>
+        <div class="opts" data-field="problems">
+          <span class="opt" data-v="truncated" title="ends abruptly, mid-motion or mid-task"><kbd>t</kbd> truncated</span>
+          <span class="opt" data-v="idle_start" title="more than ~3 s with no motion at the start"><kbd>s</kbd> idle start</span>
+          <span class="opt" data-v="idle_end" title="more than ~3 s with no motion at the end"><kbd>e</kbd> idle end</span>
+          <span class="opt" data-v="flailing" title="erratic, jerky, hesitant or repeated corrective motion"><kbd>f</kbd> flailing</span>
+          <span class="opt" data-v="glitch" title="video/robot glitch, jump, frozen frames, wrong camera"><kbd>g</kbd> glitch</span>
+          <span class="opt" data-v="wrong_task" title="does a different task than the instruction"><kbd>w</kbd> wrong task</span>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Notes <span class="muted">(optional)</span></legend>
+        <textarea id="notes" placeholder="anything odd"></textarea>
+      </fieldset>
+      <div class="nav">
+        <button id="prev"><kbd>b</kbd> Back</button>
+        <button id="next" class="primary"><kbd>Enter</kbd> Save &amp; next</button>
+      </div>
+      <p class="help muted">Labels save to <code>labels.jsonl</code> on each “Save &amp; next”. You can stop and resume any time.</p>
+    </div>
+  </div>
+</main>
+<script>
+let items = [], labels = {}, i = 0, rate = 2;
+const $ = id => document.getElementById(id);
+const vid = $("vid");
+
+function current() {
+  const box = labels[items[i].label_id] || {};
+  return { completed: box.completed || null, problems: new Set(box.problems || []), notes: box.notes || "" };
+}
+let state;
+
+function render() {
+  const it = items[i];
+  state = current();
+  vid.src = "clips/" + it.label_id + ".mp4";
+  vid.playbackRate = rate;
+  $("task").textContent = it.task || "(no task text)";
+  $("meta").textContent = `${it.duration_s} s · ${it.fps} fps · ${it.label_id}`;
+  $("pos").textContent = `${i + 1} / ${items.length}`;
+  const n = Object.keys(labels).length;
+  $("done").textContent = `${n} labeled`;
+  $("prog").style.width = (100 * n / items.length) + "%";
+  $("notes").value = state.notes;
+  paint();
+}
+function paint() {
+  document.querySelectorAll('[data-field="completed"] .opt').forEach(o => o.classList.toggle("on", o.dataset.v === state.completed));
+  document.querySelectorAll('[data-field="problems"] .opt').forEach(o => o.classList.toggle("on", state.problems.has(o.dataset.v)));
+}
+function setCompleted(v) { state.completed = v; paint(); }
+function toggle(v) { state.problems.has(v) ? state.problems.delete(v) : state.problems.add(v); paint(); }
+
+async function save() {
+  if (!state.completed) { alert("Pick yes / no / unclear for task completion first."); return false; }
+  const row = { label_id: items[i].label_id, completed: state.completed, problems: [...state.problems], notes: $("notes").value };
+  await fetch("/labels", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(row) });
+  labels[row.label_id] = row;
+  return true;
+}
+async function next() { if (await save()) { if (i < items.length - 1) i++; render(); } }
+function prev() { if (i > 0) { i--; render(); } }
+
+document.querySelectorAll('[data-field="completed"] .opt').forEach(o => o.onclick = () => setCompleted(o.dataset.v));
+document.querySelectorAll('[data-field="problems"] .opt').forEach(o => o.onclick = () => toggle(o.dataset.v));
+$("next").onclick = next; $("prev").onclick = prev;
+
+const keys = { "1": () => setCompleted("yes"), "2": () => setCompleted("no"), "3": () => setCompleted("unclear"),
+  t: () => toggle("truncated"), s: () => toggle("idle_start"), e: () => toggle("idle_end"),
+  f: () => toggle("flailing"), g: () => toggle("glitch"), w: () => toggle("wrong_task"),
+  Enter: next, b: prev, r: () => { vid.currentTime = 0; vid.play(); },
+  " ": () => vid.paused ? vid.play() : vid.pause(),
+  "[": () => { rate = Math.max(0.25, rate / 2); vid.playbackRate = rate; $("rate").textContent = rate; },
+  "]": () => { rate = Math.min(8, rate * 2); vid.playbackRate = rate; $("rate").textContent = rate; } };
+document.addEventListener("keydown", e => {
+  if (e.target.tagName === "TEXTAREA") { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); next(); } return; }
+  const f = keys[e.key]; if (f) { e.preventDefault(); f(); }
+});
+
+(async () => {
+  items = await (await fetch("manifest.json")).json();
+  labels = await (await fetch("/labels")).json();
+  const firstOpen = items.findIndex(it => !labels[it.label_id]);
+  i = firstOpen === -1 ? 0 : firstOpen;
+  render();
+})();
+</script>
+</body>
+</html>
