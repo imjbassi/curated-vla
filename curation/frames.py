@@ -94,12 +94,16 @@ def main() -> None:
     parser.add_argument("--scores", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--sources", nargs="*")
+    parser.add_argument("--shard", default="0/1", help="i/n: process every n-th sub-dataset starting at i")
     args = parser.parse_args()
+    shard_i, shard_n = map(int, args.shard.split("/"))
     df = pd.read_parquet(args.scores, columns=["source", "subset", "episode_index"])
     df = df[has_video(df)]
     if args.sources:
         df = df[df["source"].isin(args.sources)]
-    for (source, subset), g in df.groupby(["source", "subset"], sort=False):
+    for k, ((source, subset), g) in enumerate(df.groupby(["source", "subset"], sort=False)):
+        if k % shard_n != shard_i:
+            continue
         try:
             n = extract_subset(source, subset, sorted(g["episode_index"].tolist()), args.out)
             print(f"{source}/{subset or '_'}: {n} episodes", flush=True)
