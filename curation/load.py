@@ -8,6 +8,7 @@ never touched.
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -47,6 +48,17 @@ class Episode:
 def find_datasets(root: Path) -> list[Path]:
     """All dataset roots (directories containing meta/info.json) under root."""
     return sorted(p.parent.parent for p in root.rglob("meta/info.json"))
+
+
+_TF_REPR = re.compile(r'^tf\.Tensor\(b["\'](.*)["\'],\s*shape=\(\),\s*dtype=string\)$', re.S)
+
+
+def clean_task(task: str) -> str:
+    """Strip TensorFlow repr wrappers left by some OXE conversions (e.g. utaustin_mutex)."""
+    m = _TF_REPR.match(task.strip())
+    if m:
+        task = m.group(1).encode().decode("unicode_escape")
+    return " ".join(task.split())
 
 
 def _tasks(meta: Path) -> dict[int, str]:
@@ -96,7 +108,7 @@ def load_dataset(ds_root: Path, source: str, subset: str = "") -> list[Episode]:
                 subset=subset,
                 episode_index=int(ep_idx),
                 fps=fps,
-                task=tasks.get(task_idx, ""),
+                task=clean_task(tasks.get(task_idx, "")),
                 action=_column(g, "action"),
                 state=_column(g, "observation.state"),
                 timestamp=g["timestamp"].to_numpy(dtype=np.float64) if "timestamp" in g.columns else np.arange(len(g)) / fps,
