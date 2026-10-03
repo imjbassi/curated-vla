@@ -36,9 +36,20 @@ def _grab(video: str, t: float, out: Path) -> None:
 
 
 def _duration(video: str) -> float:
-    r = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", video],
+    """Container duration, falling back to stream duration, then packet count / frame rate."""
+    for entry in ("format=duration", "stream=duration"):
+        r = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", entry,
+                            "-of", "csv=p=0", video], capture_output=True, text=True, check=True)
+        try:
+            return float(r.stdout.strip().splitlines()[0])
+        except (ValueError, IndexError):
+            pass
+    r = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-count_packets", "-show_entries",
+                        "stream=nb_read_packets,r_frame_rate", "-of", "csv=p=0", video],
                        capture_output=True, text=True, check=True)
-    return float(r.stdout.strip())
+    rate, packets = r.stdout.strip().split(",")
+    num, den = rate.split("/")
+    return int(packets) * int(den) / int(num)
 
 
 def extract_subset(source: str, subset: str, episodes: list[int], out_root: Path) -> int:

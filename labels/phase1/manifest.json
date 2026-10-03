@@ -1,0 +1,1202 @@
+[
+ {
+  "label_id": "ep000",
+  "task": "pick up the square bread",
+  "duration_s": 10.2,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep001",
+  "task": "Grasp and put it in the bin.",
+  "duration_s": 14.6,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep002",
+  "task": "put the pink object on top of the drawer",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "ep003",
+  "task": "grasp the drawer handle and open it",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "ep004",
+  "task": "Pick up the tie and place it in the box.",
+  "duration_s": 10.0,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep005",
+  "task": "Pick up the yellow object.",
+  "duration_s": 14.2,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep006",
+  "task": "pick up the blue cup and put it into the brown cup.",
+  "duration_s": 23.0,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep007",
+  "task": "place the steak meat in the table",
+  "duration_s": 7.9,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep008",
+  "task": "bring contact to the pad on the board.",
+  "duration_s": 13.0,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep009",
+  "task": "layout laundry",
+  "duration_s": 3.6,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep010",
+  "task": "Pick up the green object.",
+  "duration_s": 10.2,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep011",
+  "task": "layout laundry",
+  "duration_s": 13.1,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep012",
+  "task": "Push the blue cube to the red and white target with position offset when pushing.",
+  "duration_s": 7.2,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep013",
+  "task": "place the apple fruit in the blue bowl",
+  "duration_s": 6.2,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep014",
+  "task": "Move the blue chess pieces to the highlighted squares",
+  "duration_s": 13.1,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep015",
+  "task": "go open the drawer",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "ep016",
+  "task": "Gently grip the air fryer handle with your gripper and kindly pull it open by sliding your gripper away from the base. Gradually bring your gripper in line with the blue bowl and gently capture it, without tightening your grip too much. Securely place the blue bowl inside the opened air fryer with a steady position. Liberate your robot's gripper, and withdraw your gripper from the proximity of the air fryer.",
+  "duration_s": 19.0,
+  "fps": 20.0
+ },
+ {
+  "label_id": "ep017",
+  "task": "sweep the yellow block to the left",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "ep018",
+  "task": "sweep the green cloth to the left side of the table",
+  "duration_s": 18.6,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep019",
+  "task": "\\nMeticulously direct the gripper system near the nourishment stick.\\nGrapple the nourishment stick firmly with the gripper system.\\nProgress with the gripper system grasping the stick toward the storage box.\\nTenderly permit the nourishment stick to descend into the box.",
+  "duration_s": 5.7,
+  "fps": 20.0
+ },
+ {
+  "label_id": "ep020",
+  "task": "pick up the milk dairy",
+  "duration_s": 13.3,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep021",
+  "task": "Pick up the red cube and stack it on the green cube with position offset when grasping.",
+  "duration_s": 11.4,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep022",
+  "task": "push_0094",
+  "duration_s": 8.4,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep023",
+  "task": "take the tiger out of the red bowl and put it in the grey bowl",
+  "duration_s": 21.8,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep024",
+  "task": "pick the green block and place it in the red cup",
+  "duration_s": 16.1,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep025",
+  "task": "layout laundry",
+  "duration_s": 13.6,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep026",
+  "task": "place the apple fruit in the white plate",
+  "duration_s": 4.8,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep027",
+  "task": "place the yellow object on the table",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "ep028",
+  "task": "create tower",
+  "duration_s": 14.6,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep029",
+  "task": "put the yellow object on top of the drawer",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "ep030",
+  "task": "\\nWith care, position your gripper close to the oven tray handle.\\nMake sure to grip the handle tightly.\\nDelicately and attentively pull the tray out from the oven.",
+  "duration_s": 10.6,
+  "fps": 20.0
+ },
+ {
+  "label_id": "ep031",
+  "task": "\\nCarefully approach the cobalt cup with your gripper.\\nMake sure to hold the cobalt cup delicately with your gripper.\\nCarefully elevate the cobalt cup, moving it off the surface.\\nPosition the cobalt cup to hover above the alabaster dining ware.\\nGently lower the cobalt cup onto the alabaster dining ware.\\nGradually release your hold on the cobalt cup.",
+  "duration_s": 7.4,
+  "fps": 20.0
+ },
+ {
+  "label_id": "ep032",
+  "task": "pick up the orange fruit",
+  "duration_s": 9.0,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep033",
+  "task": "Pick up the green object.",
+  "duration_s": 20.4,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep034",
+  "task": "Pick up the object and place it in the box.",
+  "duration_s": 13.6,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep035",
+  "task": "Put the red cube on top of the blue cube.",
+  "duration_s": 11.8,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep036",
+  "task": "Pick up the cube and place it in the box.",
+  "duration_s": 10.4,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep037",
+  "task": "Pick up the blue object.",
+  "duration_s": 11.3,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep038",
+  "task": "Pick up the LEGO block and place it in the bowl of the same color as the LEGO block.",
+  "duration_s": 54.8,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep039",
+  "task": "stack the purple block on top of the yellow block",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "ep040",
+  "task": "layout laundry",
+  "duration_s": 4.0,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep041",
+  "task": "take the purple block and rotate it right",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "ep042",
+  "task": "pick up the blue cup and put it into the brown cup.",
+  "duration_s": 22.6,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep043",
+  "task": "object search",
+  "duration_s": 4.4,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep044",
+  "task": "layout laundry",
+  "duration_s": 10.2,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep045",
+  "task": "put the purple object on the table",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "ep046",
+  "task": "place the milk dairy in the sink",
+  "duration_s": 7.0,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep047",
+  "task": "place the yellow cup in the dish rack",
+  "duration_s": 6.7,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep048",
+  "task": "create tower",
+  "duration_s": 3.4,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep049",
+  "task": "turn off the red led light",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "ep050",
+  "task": "\\nKindly employ your clamp to softly take hold of the bread.\\nDelicately rest it on the oven pan, verifying that it is even on the surface.\\nUsing your clamp and attentiveness, smoothly glide the pan into the oven and along the appropriate brackets, securing it in position.",
+  "duration_s": 21.4,
+  "fps": 20.0
+ },
+ {
+  "label_id": "ep051",
+  "task": "pick up the blue cup and put it into the brown cup.",
+  "duration_s": 23.6,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep052",
+  "task": "Grasp a lego block and put it in the bin.",
+  "duration_s": 8.1,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep053",
+  "task": "pull the drawer",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "ep054",
+  "task": "take the tiger out of the red bowl and put it in the grey bowl",
+  "duration_s": 17.0,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep055",
+  "task": "Push the T into the hole.",
+  "duration_s": 14.9,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep056",
+  "task": "create tower",
+  "duration_s": 3.8,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep057",
+  "task": "\\nWith care, position your gripper close to the oven tray handle.\\nMake sure to grip the handle tightly.\\nDelicately and attentively pull the tray out from the oven.",
+  "duration_s": 10.5,
+  "fps": 20.0
+ },
+ {
+  "label_id": "ep058",
+  "task": "sorting groceries, vegetables in the box with a pink sign and sweets in the box with the yellow sign",
+  "duration_s": 59.7,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep059",
+  "task": "place the yellow cup in the oven",
+  "duration_s": 7.8,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep060",
+  "task": "Grasp a dice and put it in the bin.",
+  "duration_s": 11.8,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep061",
+  "task": "pick up the burger meat",
+  "duration_s": 10.7,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep062",
+  "task": "put oranges in yellow basket",
+  "duration_s": 9.9,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep063",
+  "task": "pick up the blue cup and put it into the brown cup.",
+  "duration_s": 25.0,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep064",
+  "task": "Grasp a lego figure and put it in the box.",
+  "duration_s": 16.8,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep065",
+  "task": "layout laundry",
+  "duration_s": 7.1,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep066",
+  "task": "put the yellow object on the table",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "ep067",
+  "task": "pick up brick and put in bin",
+  "duration_s": 9.2,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep068",
+  "task": "place the milk dairy in the table",
+  "duration_s": 6.8,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep069",
+  "task": "\\nWith care, position your gripper close to the oven tray handle.\\nMake sure to grip the handle tightly.\\nDelicately and attentively pull the tray out from the oven.",
+  "duration_s": 9.2,
+  "fps": 20.0
+ },
+ {
+  "label_id": "ep070",
+  "task": "object search",
+  "duration_s": 3.2,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep071",
+  "task": "pick up brick and put in bin",
+  "duration_s": 7.1,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep072",
+  "task": "sweep the green cloth to the left side of the table",
+  "duration_s": 17.6,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep073",
+  "task": "Pick up the bolt and put it on the plate.",
+  "duration_s": 6.4,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep074",
+  "task": "Pick up the cube and place it in the box.",
+  "duration_s": 9.7,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep075",
+  "task": "Pick up the purple object.",
+  "duration_s": 13.1,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep076",
+  "task": "Position your gripper near the tray handle while precisely lining it up. Firmly yet gently grip the handle, ensuring a strong hold. Slide the tray into the oven in a steady manner until it's entirely inside. Relinquish the handle as it sits within the oven and extract your gripper with care.",
+  "duration_s": 8.6,
+  "fps": 20.0
+ },
+ {
+  "label_id": "ep077",
+  "task": "take the tiger out of the red bowl and put it in the grey bowl",
+  "duration_s": 20.4,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep078",
+  "task": "task desc.",
+  "duration_s": 15.3,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep079",
+  "task": "Pick up the cube and place it in the box.",
+  "duration_s": 11.2,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep080",
+  "task": "put the ranch bottle into the pot",
+  "duration_s": 17.6,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep081",
+  "task": "create tower",
+  "duration_s": 14.2,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep082",
+  "task": "place the yellow cup in the sink",
+  "duration_s": 11.0,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep083",
+  "task": "pick up the blue cup and put it into the brown cup.",
+  "duration_s": 24.4,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep084",
+  "task": "Pick up the red cube and put it in the box without errors.",
+  "duration_s": 7.8,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep085",
+  "task": "Pick up the blue object.",
+  "duration_s": 12.5,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep086",
+  "task": "Pouring water from one cup to another cup",
+  "duration_s": 20.0,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep087",
+  "task": "Pick up the chicken and place on orange plate",
+  "duration_s": 9.3,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep088",
+  "task": "layout laundry",
+  "duration_s": 5.8,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep089",
+  "task": "pick up the steak meat",
+  "duration_s": 9.6,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep090",
+  "task": "layout laundry",
+  "duration_s": 3.1,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep091",
+  "task": "grasp the door handle, then move the door to the left",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "ep092",
+  "task": "\\nCaressingly guide your clamp towards the toast.\\nCompassionately possess the toast with your clamp.\\nGradually tag the toast up from the worktable.\\nComplaisantly, cruise the held-toasty-pillow to your white crockery.\\nLast but notably, liberate the toast onto the shiny white tableware.",
+  "duration_s": 7.8,
+  "fps": 20.0
+ },
+ {
+  "label_id": "ep093",
+  "task": "\\nPlease adjust your gripper to match the height of the lower drawer handle.\\nProgress your gripper onward until it happens to touch the drawer handle.\\nNow, firmly take hold of it with your gripper, then steadily retract it to swing the drawer wide open.",
+  "duration_s": 7.3,
+  "fps": 20.0
+ },
+ {
+  "label_id": "ep094",
+  "task": "place the pink object inside the left cabinet",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "ep095",
+  "task": "place the milk dairy in the blue bowl",
+  "duration_s": 4.6,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep096",
+  "task": "Pick up the red object.",
+  "duration_s": 11.2,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep097",
+  "task": "Pick up the green object.",
+  "duration_s": 14.9,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep098",
+  "task": "Grasp a green tool and herd all the particles to the grey bin.",
+  "duration_s": 110.2,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep099",
+  "task": "slide the door to the left side",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "ep100",
+  "task": "grasp the drawer handle, then open it",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "ep101",
+  "task": "pull the handle of the drawer",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "ep102",
+  "task": "pick up the blue cup and put it into the brown cup.",
+  "duration_s": 24.6,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep103",
+  "task": "Look closely at the bright blue vase near you.\\nGently move your arm towards it, carefully releasing your grip to hold the vase delicately.\\nLift it slightly and place it securely on a sturdy surface, making sure it is balanced perfectly.\\nWithdraw your supporting hand, leaving the vase in its stable position.",
+  "duration_s": 10.1,
+  "fps": 20.0
+ },
+ {
+  "label_id": "ep104",
+  "task": "Pick up the green object.",
+  "duration_s": 32.7,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep105",
+  "task": "layout laundry",
+  "duration_s": 10.5,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep106",
+  "task": "Grasp a lego block and put it in the bin.",
+  "duration_s": 8.0,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep107",
+  "task": "Pick up the brown object.",
+  "duration_s": 14.8,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep108",
+  "task": "Rotate the red button clockwise with the black arm",
+  "duration_s": 16.0,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep109",
+  "task": "Pick up the green object.",
+  "duration_s": 11.8,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep110",
+  "task": "place the butter dairy in the sink",
+  "duration_s": 8.4,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep111",
+  "task": "Kindly position your hand close to the oven tray's handle. Softly yet firmly grasp the handle using your hand. Slowly and with caution, draw the tray out until it is fully stretched out.",
+  "duration_s": 8.6,
+  "fps": 20.0
+ },
+ {
+  "label_id": "ep112",
+  "task": "pick up the orange fruit",
+  "duration_s": 8.4,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep113",
+  "task": "Fold tea towel into quarters",
+  "duration_s": 19.3,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep114",
+  "task": "pick up the green cup",
+  "duration_s": 8.2,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep115",
+  "task": "Pick up the blue object.",
+  "duration_s": 13.7,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep116",
+  "task": "Pick up the brown object.",
+  "duration_s": 29.7,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep117",
+  "task": "Pick up the red object.",
+  "duration_s": 10.3,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep118",
+  "task": "pick up the orange fruit",
+  "duration_s": 4.4,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep119",
+  "task": "Pick up the tie and place it in the box.",
+  "duration_s": 10.0,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep120",
+  "task": "push right the pink block",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "ep121",
+  "task": "Move along the line on the paper from start to end.",
+  "duration_s": 11.8,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep122",
+  "task": "layout laundry",
+  "duration_s": 9.8,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep123",
+  "task": "Pick up the yellow object.",
+  "duration_s": 14.7,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep124",
+  "task": "Extend the gripper towards the air fryer handle.\\nGrasp the air fryer handle and pull it to open the air fryer.\\nRelease the air fryer handle and move the gripper to the bread.\\nGrasp the bread with the gripper and move it to the air fryer basket.\\nRelease the bread inside the air fryer and retract the gripper.",
+  "duration_s": 21.7,
+  "fps": 20.0
+ },
+ {
+  "label_id": "ep125",
+  "task": "Pick up the blue object.",
+  "duration_s": 14.1,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep126",
+  "task": "put the ranch bottle into the pot",
+  "duration_s": 18.4,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep127",
+  "task": "put the ranch bottle into the pot",
+  "duration_s": 18.8,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep128",
+  "task": "\\nPlease move the gripper into proximity with the fryer handle.\\nOnce close enough, gingerly grasp the handle and gently tug the fryer basket open in your direction.",
+  "duration_s": 9.2,
+  "fps": 20.0
+ },
+ {
+  "label_id": "ep129",
+  "task": "Pick up the red object.",
+  "duration_s": 10.9,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep130",
+  "task": "take the tiger out of the red bowl and put it in the grey bowl",
+  "duration_s": 21.6,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep131",
+  "task": "layout laundry",
+  "duration_s": 12.3,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep132",
+  "task": "pick up the black bowl",
+  "duration_s": 13.3,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep133",
+  "task": "sweep the green cloth to the left side of the table",
+  "duration_s": 15.8,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep134",
+  "task": "placing cube inside a red bawl",
+  "duration_s": 34.9,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep135",
+  "task": "object search",
+  "duration_s": 10.2,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep136",
+  "task": "Grasp a lego block and put it in the bin.",
+  "duration_s": 19.4,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep137",
+  "task": "layout laundry",
+  "duration_s": 7.7,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep138",
+  "task": "Pick up the bolt and put it on the plate.",
+  "duration_s": 8.1,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep139",
+  "task": "Pick up the green object.",
+  "duration_s": 13.5,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep140",
+  "task": "put the ranch bottle into the pot",
+  "duration_s": 20.0,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep141",
+  "task": "Position your gripper near the tray handle while precisely lining it up. Firmly yet gently grip the handle, ensuring a strong hold. Slide the tray into the oven in a steady manner until it's entirely inside. Relinquish the handle as it sits within the oven and extract your gripper with care.",
+  "duration_s": 10.8,
+  "fps": 20.0
+ },
+ {
+  "label_id": "ep142",
+  "task": "move the red light switch to turn off the red light",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "ep143",
+  "task": "put the ranch bottle into the pot",
+  "duration_s": 19.0,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep144",
+  "task": "pick up the blue cup and put it into the brown cup.",
+  "duration_s": 22.6,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep145",
+  "task": "grasp the drawer handle, then open it",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "ep146",
+  "task": "Move along the line on the paper from start to end.",
+  "duration_s": 13.5,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep147",
+  "task": "object search",
+  "duration_s": 9.2,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep148",
+  "task": "Pick up the brown object.",
+  "duration_s": 31.2,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep149",
+  "task": "Put the coffee capsule into the top drawer of the teabox.",
+  "duration_s": 10.8,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep150",
+  "task": "place the grasped pink block inside the left cabinet",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "ep151",
+  "task": "\\nPlease find the red cup among the items before you.\\nCarefully move your gripper towards it and gently hold it.\\nLocate the front section of the organizer in front of you.\\nTransfer the red cup above the front section and let go, placing it within that section.",
+  "duration_s": 8.1,
+  "fps": 20.0
+ },
+ {
+  "label_id": "ep152",
+  "task": "object search",
+  "duration_s": 12.0,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep153",
+  "task": "place the square bread in the sink",
+  "duration_s": 6.2,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep154",
+  "task": "Grasp a strawberry and put it in the bin.",
+  "duration_s": 3.8,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep155",
+  "task": "take the tiger out of the red bowl and put it in the grey bowl",
+  "duration_s": 16.6,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep156",
+  "task": "place the milk dairy in the white plate",
+  "duration_s": 4.2,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep157",
+  "task": "place the gray bowl in the gray plate",
+  "duration_s": 7.4,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep158",
+  "task": "Please shift your gripper toward the book. Carefully hold the book with your gripper. Gently transport the book using your gripper to the caddy's front section. Safely let the book go into the caddy's front area.",
+  "duration_s": 9.9,
+  "fps": 20.0
+ },
+ {
+  "label_id": "ep159",
+  "task": "\\nMeticulously direct the gripper system near the nourishment stick.\\nGrapple the nourishment stick firmly with the gripper system.\\nProgress with the gripper system grasping the stick toward the storage box.\\nTenderly permit the nourishment stick to descend into the box.",
+  "duration_s": 7.1,
+  "fps": 20.0
+ },
+ {
+  "label_id": "ep160",
+  "task": "object search",
+  "duration_s": 3.7,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep161",
+  "task": "sweep the green cloth to the left side of the table",
+  "duration_s": 15.0,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep162",
+  "task": "pick up the butter dairy",
+  "duration_s": 4.1,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep163",
+  "task": "Grasp the black motor and put it in the box.",
+  "duration_s": 19.9,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep164",
+  "task": "pick up the blue cup and put it into the brown cup.",
+  "duration_s": 25.4,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep165",
+  "task": "Grasp a lego block and put it in the bin 3 cameras.",
+  "duration_s": 13.9,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep166",
+  "task": "go towards the purple block and lift it",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "ep167",
+  "task": "Pick up the green object.",
+  "duration_s": 11.0,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep168",
+  "task": "take the tiger out of the red bowl and put it in the grey bowl",
+  "duration_s": 19.6,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep169",
+  "task": "Move the blue chess pieces as indicated by the highlighted squares",
+  "duration_s": 12.6,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep170",
+  "task": "Pick up the tie and place it in the box.",
+  "duration_s": 10.0,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep171",
+  "task": "pick up the blue cup and put it into the brown cup.",
+  "duration_s": 25.4,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep172",
+  "task": "\\nPlease find the red cup among the items before you.\\nCarefully move your gripper towards it and gently hold it.\\nLocate the front section of the organizer in front of you.\\nTransfer the red cup above the front section and let go, placing it within that section.",
+  "duration_s": 8.2,
+  "fps": 20.0
+ },
+ {
+  "label_id": "ep173",
+  "task": "object search",
+  "duration_s": 7.0,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep174",
+  "task": "Look closely at the bright blue vase near you.\\nGently move your arm towards it, carefully releasing your grip to hold the vase delicately.\\nLift it slightly and place it securely on a sturdy surface, making sure it is balanced perfectly.\\nWithdraw your supporting hand, leaving the vase in its stable position.",
+  "duration_s": 6.5,
+  "fps": 20.0
+ },
+ {
+  "label_id": "ep175",
+  "task": "\\nPlease move the gripper into proximity with the fryer handle.\\nOnce close enough, gingerly grasp the handle and gently tug the fryer basket open in your direction.",
+  "duration_s": 10.1,
+  "fps": 20.0
+ },
+ {
+  "label_id": "ep176",
+  "task": "sweep the yellow block to the left",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "ep177",
+  "task": "move the green light switch to turn off the green light",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "ep178",
+  "task": "pick up the steak meat",
+  "duration_s": 8.6,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep179",
+  "task": "Pick up the blue object.",
+  "duration_s": 12.4,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep180",
+  "task": "Stack the balls on top of each other.",
+  "duration_s": 13.8,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep181",
+  "task": "create tower",
+  "duration_s": 3.0,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep182",
+  "task": "go push the pink block to the right",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "ep183",
+  "task": "Transfer object between two arms",
+  "duration_s": 89.9,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep184",
+  "task": "Move the red chess pieces to the highlighted squares",
+  "duration_s": 19.4,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep185",
+  "task": "Pick up the orange object and but it in the LEGO box.",
+  "duration_s": 4.8,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep186",
+  "task": "Please shift your gripper toward the book. Carefully hold the book with your gripper. Gently transport the book using your gripper to the caddy's front section. Safely let the book go into the caddy's front area.",
+  "duration_s": 9.2,
+  "fps": 20.0
+ },
+ {
+  "label_id": "ep187",
+  "task": "pick up the black bowl",
+  "duration_s": 3.3,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep188",
+  "task": "Grasp the purple lego block and put it in the box.",
+  "duration_s": 19.6,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep189",
+  "task": "Move along the line on the paper from start to end.",
+  "duration_s": 12.1,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep190",
+  "task": "Pick up the green object.",
+  "duration_s": 14.9,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep191",
+  "task": "create tower",
+  "duration_s": 4.4,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep192",
+  "task": "Position your gripper near the tray handle while precisely lining it up. Firmly yet gently grip the handle, ensuring a strong hold. Slide the tray into the oven in a steady manner until it's entirely inside. Relinquish the handle as it sits within the oven and extract your gripper with care.",
+  "duration_s": 9.4,
+  "fps": 20.0
+ },
+ {
+  "label_id": "ep193",
+  "task": "pick up the blue cup and put it into the brown cup.",
+  "duration_s": 25.2,
+  "fps": 5.0
+ },
+ {
+  "label_id": "ep194",
+  "task": "Pick up the blue object.",
+  "duration_s": 9.0,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep195",
+  "task": "Pick up the green object.",
+  "duration_s": 23.2,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep196",
+  "task": "Move your gripper in the direction of the red bowl and clutch it softly. Cautiously raise the red bowl up from the surface. Hover the red bowl above the basket and gently bring it down inside. Let go of the gripper's grasp when the red bowl is within the basket.",
+  "duration_s": 7.2,
+  "fps": 20.0
+ },
+ {
+  "label_id": "ep197",
+  "task": "Pick a red lego block and move it to the right.",
+  "duration_s": 8.0,
+  "fps": 30.0
+ },
+ {
+  "label_id": "ep198",
+  "task": "Pick up the blue object.",
+  "duration_s": 14.4,
+  "fps": 10.0
+ },
+ {
+  "label_id": "ep199",
+  "task": "Move your gripper towards the bottom drawer handle.\\nGrasp the handle gently with your gripper.\\nApply gentle outward force to slide the bottom drawer open.",
+  "duration_s": 8.3,
+  "fps": 20.0
+ }
+]

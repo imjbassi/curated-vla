@@ -20,6 +20,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from scipy.stats import fisher_exact
 from sklearn.metrics import cohen_kappa_score, roc_auc_score
 
 # detector flag column -> hand-label problem
@@ -73,6 +74,12 @@ def main() -> None:
 
     key = pd.read_parquet(args.label_dir / "sample_key.parquet")
     df = key.merge(load_labels(args.label_dir), on="label_id")
+    # Drop episodes whose clip failed to render: the labeler saw no video, so the
+    # label describes our tooling, not the data.
+    broken = [i for i in df["label_id"] if (args.label_dir / "clips" / f"{i}.mp4").stat().st_size < 1000]
+    if broken:
+        print(f"Excluded {len(broken)} episode(s) with empty clips: {broken}\n")
+        df = df[~df["label_id"].isin(broken)]
     df["flag_idle_start"] = df["idle_start_s"] > 3.0
     df["flag_idle_end"] = df["idle_end_s"] > 3.0
 
@@ -92,6 +99,19 @@ def main() -> None:
     rows.append(dict(detector="flag_any", label="any problem or failed", **evaluate(df, "flag_any", "lab_bad")))
     print("## Detector vs hand label (labeled sample)\n")
     print(pd.DataFrame(rows).round(3).to_markdown(index=False))
+
+    print("\n## Do detector flags predict hand-labeled failure?\n")
+    print("Failure = task completed 'no' (episodes labeled 'unclear' excluded). Fisher exact test.\n")
+    dd = df[df["completed"] != "unclear"]
+    pred = []
+    for f in [*PAIRS, "flag_any"]:
+        a = dd[dd[f]]["lab_failed"]
+        b = dd[~dd[f]]["lab_failed"]
+        table = [[int(a.sum()), int((~a).sum())], [int(b.sum()), int((~b).sum())]]
+        odds, p = fisher_exact(table) if len(a) and len(b) else (np.nan, np.nan)
+        pred.append(dict(detector=f, n_flagged=len(a), fail_rate_flagged=a.mean() if len(a) else np.nan,
+                         fail_rate_unflagged=b.mean(), odds_ratio=odds, p_value=p))
+    print(pd.DataFrame(pred).round(3).to_markdown(index=False))
 
     print("\n## Within length tertiles (F1)\n")
     df["len_bin"] = pd.qcut(df["length"].rank(method="first"), 3, labels=["short", "mid", "long"])

@@ -1,6 +1,6 @@
 # Phase 1: Data audit
 
-Status: in progress (started 2026-10-03). Detectors built and run on all sources; **hand-label validation pending** (200 episodes), VLM judge pending full run.
+Status: audit and validation done (2026-10-03). **Most motion detectors did not validate**; only idle-at-start predicts failure. Task failure is the main problem, and the VLM judge (AUROC 0.69) is not yet good enough to filter on. Next: a better failure detector.
 
 ## Datasets
 
@@ -87,9 +87,58 @@ Spearman ρ of each score with episode length, overall and within length quintil
 - **Spike**: mild positive correlation (max over more steps); within-quintile ρ ≤ 0.17.
 - **Truncation, jerk**: within-quintile |ρ| ≤ 0.17 everywhere.
 
-## Validation (pending)
+## Validation
 
-200 episodes, 25 per source, half flagged / half unflagged by any detector, shuffled; detector outputs hidden from the labeler. Labels: task completed (yes/no/unclear) + truncated / idle start / idle end / flailing / glitch / wrong task.
+200 episodes, 25 per source. Within each source, half come from flagged episodes, spread round-robin across the detectors that fire there (so the sample has 14 idle, 60 truncation, 18 spike and 29 flailing flags), and half from unflagged ones; order shuffled. Detector outputs were hidden from the labeler. Labels: task completed (yes/no/unclear) + truncated / idle start / idle end / flailing / glitch / wrong task. Raw labels and outputs: [`labels/phase1/`](../labels/phase1/).
+
+One episode (`ep168`, berkeley_autolab_ur5/613) was excluded: its clip rendered empty, so its label ("unclear", "glitch") describes our tooling, not the data. 199 remain; 186 after excluding "unclear".
+
+### Hand labels
+
+| | count |
+|---|---|
+| Task completed: yes / no / unclear | 150 / 37 / 13 |
+| Truncated / idle start / idle end / flailing / glitch / wrong task | 1 / 0 / 0 / 0 / 0* / 5 |
+
+\*The one glitch label was ep168 (excluded).
+
+Failure rate by source (186 episodes): fmb 60%, roboturk 31%, community_v2 29%, community_v1 20%, utaustin_mutex 16%, taco_play 4%, jaco_play 0%, berkeley_autolab_ur5 0%.
+
+### Detectors vs the problem they target
+
+| detector | label | flagged | label positives | precision | recall | κ |
+|---|---|---|---|---|---|---|
+| truncation | truncated | 59 | 1 | 0.02 | 1.00 | 0.02 |
+| idle start | idle start | 8 | 0 | 0 | – | – |
+| idle end | idle end | 10 | 0 | 0 | – | – |
+| flailing | flailing | 29 | 0 | 0 | – | – |
+| spike | glitch | 18 | 0 | 0 | – | – |
+
+The labeler perceived almost none of the problems these detectors flag.
+
+### Do flags predict failure?
+
+| detector | flagged | fail rate flagged | fail rate unflagged | odds ratio | p (Fisher) |
+|---|---|---|---|---|---|
+| **idle start** | 8 | **62%** | 18% | **7.7** | **0.008** |
+| idle end | 9 | 44% | 19% | 3.5 | 0.078 |
+| spike | 17 | 29% | 19% | 1.8 | 0.34 |
+| truncation | 57 | 18% | 21% | 0.8 | 0.69 |
+| flailing | 27 | 15% | 21% | 0.7 | 0.61 |
+| any | 91 | 23% | 17% | 1.5 | 0.36 |
+
+With 6 tests, idle-start survives a Bonferroni correction only marginally (0.008 × 6 ≈ 0.05), and rests on 8 flagged episodes. Treat it as promising, not established.
+
+### VLM judge
+
+Qwen3-VL-4B, first + last frame + instruction, P(yes) for "completed?": **AUROC 0.69** (n = 186). Badly calibrated: median P(yes) is 0.03, so any usable threshold is very low (P < 0.01 flags 37% of episodes, with precision 0.31 and recall 0.57 for failures). Per source: fmb 0.85, community_v2 0.73, community_v1 0.63, utaustin_mutex 0.33 (worse than chance); roboturk and taco_play 1.00 but on 5 and 1 failures.
+
+### Conclusions
+
+1. **Don't filter on truncation, flailing or spike as built.** No agreement with labels and no relationship to failure.
+2. **Keep idle-at-start** as a candidate filter; confirm on more labels.
+3. **Task failure is the quality problem worth curating**, and it is concentrated by source. A failure detector good enough to filter on is the main open item: try a larger VLM, more frames (or video), and source-specific prompts, and validate on the same 186 labels.
+4. **Labeling caveat:** only 7 problem ticks in 200 episodes. The motion detectors may flag real but mild issues the labeler judged not worth marking. Completion is the more reliable label, which is why it's the main criterion above.
 
 ```bash
 python -m curation.sample_for_labeling --scores AUDIT/scores.parquet --out LABELS --n 200
