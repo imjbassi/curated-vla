@@ -133,6 +133,23 @@ With 6 tests, idle-start survives a Bonferroni correction only marginally (0.008
 
 Qwen3-VL-4B, first + last frame + instruction, P(yes) for "completed?": **AUROC 0.69** (n = 186). Badly calibrated: median P(yes) is 0.03, so any usable threshold is very low (P < 0.01 flags 37% of episodes, with precision 0.31 and recall 0.57 for failures). Per source: fmb 0.85, community_v2 0.73, community_v1 0.63, utaustin_mutex 0.33 (worse than chance); roboturk and taco_play 1.00 but on 5 and 1 failures.
 
+### VLM judge on the full population
+
+Run on all 34,156 episodes with frames (`curation/vlm_judge.py`, ~1 h on the 4070). 807 episodes have no frames: the 774-episode community_v2 sub-dataset with no videos, plus 33 episodes whose videos are missing or unreadable.
+
+| source | episodes | judged | median P(yes) | % P(yes) < 0.01 | hand-labeled failure rate |
+|---|---|---|---|---|---|
+| community_v1 | 11,108 | 11,108 | 0.037 | 31.9 | 20% |
+| community_v2 | 12,920 | 12,123 | 0.029 | 39.9 | 29% |
+| taco_play | 3,603 | 3,602 | 0.060 | 24.2 | 4% |
+| jaco_play | 1,085 | 1,085 | 0.679 | 6.7 | 0% |
+| berkeley_autolab_ur5 | 1,000 | 993 | 0.003 | **62.9** | **0%** |
+| utaustin_mutex | 1,500 | 1,498 | 0.029 | 37.7 | 16% |
+| roboturk | 1,943 | 1,943 | 0.029 | 34.0 | 31% |
+| fmb | 1,804 | 1,804 | 0.076 | **21.6** | **60%** |
+
+Across sources, the judge's flag rate does not track the hand-labeled failure rate: it flags 63% of berkeley_autolab_ur5 (0 labeled failures) and only 22% of fmb (60% labeled failures). Its scores largely reflect the scene and camera, not task success. **Not usable as a filter.**
+
 ### Conclusions
 
 1. **Don't filter on truncation, flailing or spike as built.** No agreement with labels and no relationship to failure.
