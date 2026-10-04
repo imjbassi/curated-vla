@@ -1,0 +1,242 @@
+[
+ {
+  "label_id": "idle00",
+  "task": "Grasp a whale and put it in the plate.",
+  "duration_s": 29.9,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle01",
+  "task": "Pick up the object from box A and place it in box B.",
+  "duration_s": 18.4,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle02",
+  "task": "Grasp a lego block and put it in the bin.",
+  "duration_s": 9.6,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle03",
+  "task": "Grasp a whale and put it in the plate.",
+  "duration_s": 22.6,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle04",
+  "task": "Flip A0.",
+  "duration_s": 14.9,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle05",
+  "task": "Pick up the blue cube.",
+  "duration_s": 22.3,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle06",
+  "task": "Grasp white cube and place it in the bowl.",
+  "duration_s": 10.0,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle07",
+  "task": "Grasp a red tape and put it on the box.",
+  "duration_s": 10.1,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle08",
+  "task": "Move along the line on the paper from start to end.",
+  "duration_s": 9.4,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle09",
+  "task": "Pick up the card from the shelf.",
+  "duration_s": 7.5,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle10",
+  "task": "grab the candle wick and place it in the tray.",
+  "duration_s": 27.5,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle11",
+  "task": "Grasp the screwdriver, and drop it in the box.",
+  "duration_s": 11.9,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle12",
+  "task": "Pick up the object from box A and place it in box B.",
+  "duration_s": 44.1,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle13",
+  "task": "Move the blue chess pieces to the highlighted squares.",
+  "duration_s": 8.4,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle14",
+  "task": "Extarct the molar and put it somewhere.",
+  "duration_s": 10.1,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle15",
+  "task": "Grasp a lego figure and put it in the box.",
+  "duration_s": 18.3,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle16",
+  "task": "Pick the horse and place it to the right.",
+  "duration_s": 17.9,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle17",
+  "task": "Grasp the tape and put it in the box.",
+  "duration_s": 19.9,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle18",
+  "task": "Put the banana in the red bowl.",
+  "duration_s": 21.0,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle19",
+  "task": "Pick up the card from the shelf.",
+  "duration_s": 6.4,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle20",
+  "task": "Pick up the green LEGO block and place it in the green bowl.",
+  "duration_s": 16.3,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle21",
+  "task": "Pick up the orange cone and place it on the table.",
+  "duration_s": 14.9,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle22",
+  "task": "Grasp a ball and put it in the hole.",
+  "duration_s": 22.1,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle23",
+  "task": "Pick up the blue cube and place it in the box.",
+  "duration_s": 9.8,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle24",
+  "task": "pick up carrot and bring to mouth",
+  "duration_s": 20.8,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle25",
+  "task": "Pick up the cube and place it in the box.",
+  "duration_s": 10.0,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle26",
+  "task": "Grasp a lego block and put it in the bin.",
+  "duration_s": 38.8,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle27",
+  "task": "Grasp a dice and put it in the bin.",
+  "duration_s": 10.8,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle28",
+  "task": "Pick up the object from box A and place it in box B.",
+  "duration_s": 27.9,
+  "fps": 50.0
+ },
+ {
+  "label_id": "idle29",
+  "task": "Play LA",
+  "duration_s": 9.5,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle30",
+  "task": "Transfer object between two arms",
+  "duration_s": 39.3,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle31",
+  "task": "test1",
+  "duration_s": 4.2,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle32",
+  "task": "Grasp a block and put it in a cup.",
+  "duration_s": 14.9,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle33",
+  "task": "Grasp a lego block and put it in the bin.",
+  "duration_s": 9.0,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle34",
+  "task": "Grasp a lego block and put it in the bin.",
+  "duration_s": 79.5,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle35",
+  "task": "Grab stuffed animal and throw it on the dot.",
+  "duration_s": 6.3,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle36",
+  "task": "Move along the line on the paper from start to end.",
+  "duration_s": 9.8,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle37",
+  "task": "Pick up the object and place it in the box.",
+  "duration_s": 16.9,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle38",
+  "task": "Grab the lemon with the black arm, then give it to the green arm, then place the lemon in the cardboard box with the green arm.",
+  "duration_s": 33.1,
+  "fps": 30.0
+ },
+ {
+  "label_id": "idle39",
+  "task": "Stack the cubes in the following order from bottom to top: black, blue, then orange.",
+  "duration_s": 29.6,
+  "fps": 30.0
+ }
+]
