@@ -16,10 +16,10 @@ from datetime import datetime, timezone
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-PAGE = Path(__file__).with_name("label_page.html")
+PAGES = {"full": Path(__file__).with_name("label_page.html"), "idle": Path(__file__).with_name("label_idle.html")}
 
 
-def make_handler(label_dir: Path):
+def make_handler(label_dir: Path, page: Path = PAGES["full"]):
     labels_path = label_dir / "labels.jsonl"
 
     class Handler(SimpleHTTPRequestHandler):
@@ -31,7 +31,7 @@ def make_handler(label_dir: Path):
 
         def do_GET(self):
             if self.path in ("/", "/index.html"):
-                body = PAGE.read_bytes()
+                body = page.read_bytes()
                 self.send_response(200)
                 self.send_header("Content-Type", "text/html; charset=utf-8")
                 self.send_header("Content-Length", str(len(body)))
@@ -70,8 +70,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("label_dir", type=Path)
     parser.add_argument("--port", type=int, default=8765)
+    parser.add_argument("--page", choices=sorted(PAGES), default="full")
     args = parser.parse_args()
-    server = ThreadingHTTPServer(("127.0.0.1", args.port), make_handler(args.label_dir))
+    server = ThreadingHTTPServer(("127.0.0.1", args.port), make_handler(args.label_dir, PAGES[args.page]))
     print(f"Labeling app: http://localhost:{args.port}  (labels -> {args.label_dir / 'labels.jsonl'})")
     server.serve_forever()
 

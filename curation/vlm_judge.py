@@ -19,27 +19,44 @@ from PIL import Image
 from transformers import AutoModelForImageTextToText, AutoProcessor
 
 MODEL = "Qwen/Qwen3-VL-4B-Instruct"
-PROMPT = (
+PROMPT_2 = (
     "These are the first and last frames of a robot demonstration.\n"
     "Instruction given to the robot: \"{task}\"\n"
     "Looking at the last frame compared to the first, was the instruction fully completed? "
     "Answer with a single word: yes or no."
 )
+PROMPT_N = (
+    "These are {n} frames in time order from one robot demonstration, from start to end.\n"
+    "Instruction given to the robot: \"{task}\"\n"
+    "By the final frame, has the instruction been fully completed? "
+    "Answer with a single word: yes or no."
+)
 
 
 class Judge:
-    def __init__(self, model_id: str = MODEL, device: str = "cuda"):
+    def __init__(self, model_id: str = MODEL, device: str = "cuda", quant4: bool = False):
         self.processor = AutoProcessor.from_pretrained(model_id)
-        self.model = AutoModelForImageTextToText.from_pretrained(model_id, dtype=torch.bfloat16).to(device).eval()
+        if quant4:
+            from transformers import BitsAndBytesConfig
+
+            q = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_compute_dtype=torch.bfloat16, bnb_4bit_quant_type="nf4")
+            self.model = AutoModelForImageTextToText.from_pretrained(model_id, quantization_config=q, device_map=device).eval()
+        else:
+            self.model = AutoModelForImageTextToText.from_pretrained(model_id, dtype=torch.bfloat16).to(device).eval()
         tok = self.processor.tokenizer
         self.yes_ids = sorted({tok.encode(w, add_special_tokens=False)[0] for w in ["yes", "Yes", " yes", " Yes"]})
         self.no_ids = sorted({tok.encode(w, add_special_tokens=False)[0] for w in ["no", "No", " no", " No"]})
 
     @torch.inference_mode()
     def p_yes(self, first: Image.Image, last: Image.Image, task: str) -> float:
+        return self.p_yes_frames([first, last], task)
+
+    @torch.inference_mode()
+    def p_yes_frames(self, frames: list[Image.Image], task: str) -> float:
+        prompt = PROMPT_2 if len(frames) == 2 else PROMPT_N
         messages = [{"role": "user", "content": [
-            {"type": "image", "image": first}, {"type": "image", "image": last},
-            {"type": "text", "text": PROMPT.format(task=task or "complete the task")}]}]
+            *({"type": "image", "image": f} for f in frames),
+            {"type": "text", "text": prompt.format(task=task or "complete the task", n=len(frames))}]}]
         inputs = self.processor.apply_chat_template(messages, add_generation_prompt=True, tokenize=True,
                                                     return_dict=True, return_tensors="pt").to(self.model.device)
         logits = self.model(**inputs).logits[0, -1].float()
