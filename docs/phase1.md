@@ -155,7 +155,7 @@ Across sources, the judge's flag rate does not track the hand-labeled failure ra
 1. **Don't filter on truncation, flailing or spike as built.** No agreement with labels and no relationship to failure.
 2. **Keep idle-at-start** as a candidate filter; confirm on more labels.
 3. **Task failure is the quality problem worth curating**, and it is concentrated by source. A failure detector good enough to filter on is the main open item: try a larger VLM, more frames (or video), and source-specific prompts, and validate on the same 186 labels.
-4. **Labeling caveat:** only 7 problem ticks in 200 episodes. The motion detectors may flag real but mild issues the labeler judged not worth marking. Completion is the more reliable label, which is why it's the main criterion above.
+4. **Labeling caveat (confirmed with the labeler, 2026-10-04):** the idle boxes were ticked only when the robot never moved during the whole episode, much stricter than the detector's "> 3 s still at the start/end". So the idle-start / idle-end agreement rows above are **not a valid test** of the idle detectors; they need re-scoring against labels that use the detector's definition. The other problem boxes (truncated, flailing, glitch) were used as named, so those detectors remain unvalidated. The idle-start → failure association is unaffected, since it uses the completion label.
 
 ```bash
 python -m curation.sample_for_labeling --scores AUDIT/scores.parquet --out LABELS --n 200
