@@ -33,7 +33,7 @@ Quality detectors target four failure modes: **truncation**, **idle time**, **fl
 | Phase | Weeks | Milestone | Status |
 |---|---|---|---|
 | 0 | 1 | Environment works, published SmolVLA LIBERO numbers reproduced, compute estimated | ✅ [report](docs/phase0.md): 72.2% avg, matches community reproduction; paper's 87.3% not reached |
-| 1 | 2–3 | Data audited, quality detectors validated | 🔶 [report](docs/phase1.md): audit done, 200 episodes hand-labeled; most motion detectors **did not** validate (see below) |
+| 1 | 2–3 | Data audited, quality detectors validated | 🔶 [report](docs/phase1.md): idle detectors validated; truncation/flailing/spike did not; failure judge at AUROC 0.84, pending fresh-label check |
 | 2 | 4–5 | Baseline model pretrained, post-trained, benchmarked | ⏳ |
 | 3 | 6–8 | Curated vs random results | ⏳ |
 | 4 | 9–10 | Per-filter ablations and dose-response | ⏳ |
@@ -81,11 +81,11 @@ flowchart LR
 
 - **Task failure is the dominant human-visible problem**: 19% of episodes, concentrated in a few sources (fmb 60%, roboturk 31%, community_v2 29%). The HF-filtered community_v1 fails less often than the unfiltered v2 (20% vs 29%, small n).
 - **Idle time at the start predicts failure**: 62% of flagged episodes fail, vs 18% of unflagged (odds ratio 7.7, p = 0.008, n = 8 flagged). Idle at the end trends the same way (p = 0.08).
+- **The idle detectors are validated.** The first pass labeled "idle" only when the robot never moved, so a second blind pass of 40 episodes used the detector's own definition (> 3 s still). Idle at start matched the labels exactly (10 of 10, κ = 1.00); idle at end reached κ = 0.75, with every disagreement within 0.8 s of the 3 s threshold.
 - **Truncation, flailing and spike detectors did not validate.** The labeler saw almost none of the problems they flag (1 truncation in 200; no flailing or glitches), and their flags do not predict failure. They will not be used as filters as-is.
-- **The VLM success judge is weak**: AUROC 0.69 for hand-labeled completion (Qwen3-VL-4B on first + last frames), strong on some sources (fmb 0.85) and worse than chance on others (utaustin_mutex 0.33). A better failure detector is the main open item.
-- **Caveat:** "idle" was labeled only when the robot never moved in the whole episode, far stricter than the detector's "> 3 s still at the start or end". The idle detectors therefore still need a like-for-like check; their link to task failure (above) does not depend on that label.
+- **The VLM failure judge improved from weak to promising.** First + last frames gave AUROC 0.69; 8 frames from across the episode raise it to 0.83 (Qwen3-VL-4B) and 0.84 (Qwen3-VL-8B, 4-bit). Frame count mattered more than model size. Because the configuration was chosen on these same labels, it still needs a fresh-label check before use as a filter.
 
-Full details: [docs/phase1.md](docs/phase1.md). Labels: [labels/phase1/](labels/phase1/).
+Full details: [docs/phase1.md](docs/phase1.md). Labels: [labels/phase1/](labels/phase1/) (200-episode pass) and [labels/phase1_idle/](labels/phase1_idle/) (idle pass).
 
 ## Layout
 

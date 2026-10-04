@@ -1,6 +1,6 @@
 # Phase 1: Data audit
 
-Status: audit and validation done (2026-10-03). **Most motion detectors did not validate**; only idle-at-start predicts failure. Task failure is the main problem, and the VLM judge (AUROC 0.69) is not yet good enough to filter on. Next: a better failure detector.
+Status (2026-10-04): audit and validation done. **Idle detectors validated** (like-for-like pass: start κ = 1.00, end κ = 0.75) and idle-at-start predicts failure. Truncation, flailing and spike did not validate. Task failure is the main problem; an 8-frame VLM judge reaches AUROC 0.84 on the labeled sample (vs 0.69 for the first version) and needs confirmation on fresh labels.
 
 ## Datasets
 
@@ -150,6 +150,17 @@ Run on all 34,156 episodes with frames (`curation/vlm_judge.py`, ~1 h on the 407
 
 Across sources, the judge's flag rate does not track the hand-labeled failure rate: it flags 63% of berkeley_autolab_ur5 (0 labeled failures) and only 22% of fmb (60% labeled failures). Its scores largely reflect the scene and camera, not task success. **Not usable as a filter.**
 
+### Idle detectors: like-for-like check (2026-10-04)
+
+Because the first pass used a stricter idle definition, a second blind pass labeled idle with the detector's own definition: "completely still for more than ~3 s at the start / end". 40 fresh episodes from the sources where idle fires (community_v1 / v2), 20 flagged by an idle detector and 20 not, shuffled, played at 1× (`curation/sample_idle.py`, `label_server --page idle`). Labels: [`labels/phase1_idle/`](../labels/phase1_idle/).
+
+| detector | labeled positives | flagged | precision | recall | κ | AUROC (raw seconds) |
+|---|---|---|---|---|---|---|
+| idle at start (> 3 s) | 10 | 10 | **1.00** | **1.00** | **1.00** | 1.00 |
+| idle at end (> 3 s) | 11 | 11 | 0.82 | 0.82 | 0.75 | 0.98 |
+
+All four idle-end disagreements are within 0.8 s of the threshold (detector measured 2.2, 2.5, 3.2 and 3.4 s): borderline calls against an eyeballed "about 3 seconds", not detector errors. **Both idle detectors are validated** at the 3 s threshold.
+
 ### Failure detector iteration (2026-10-04)
 
 `python -m curation.failure_eval LABELS --configs ...`: frames sampled evenly from each labeled clip; AUROC vs hand-labeled completion on the same 187 episodes ("unclear" and the empty clip excluded). Per-source AUROC is blank where a source had no labeled failures.
@@ -171,7 +182,7 @@ Across sources, the judge's flag rate does not track the hand-labeled failure ra
 ### Conclusions
 
 1. **Don't filter on truncation, flailing or spike as built.** No agreement with labels and no relationship to failure.
-2. **Keep idle-at-start** as a candidate filter; confirm on more labels.
+2. **Idle detectors are validated** (start κ = 1.00, end κ = 0.75 on a like-for-like pass), and idle-at-start is associated with failure (62% vs 18%, n = 8 flagged). Idle is the first filter ready for Phase 3.
 3. **Task failure is the quality problem worth curating**, and it is concentrated by source. A failure detector good enough to filter on is the main open item: try a larger VLM, more frames (or video), and source-specific prompts, and validate on the same 186 labels.
 4. **Labeling caveat (confirmed with the labeler, 2026-10-04):** the idle boxes were ticked only when the robot never moved during the whole episode, much stricter than the detector's "> 3 s still at the start/end". So the idle-start / idle-end agreement rows above are **not a valid test** of the idle detectors; they need re-scoring against labels that use the detector's definition. The other problem boxes (truncated, flailing, glitch) were used as named, so those detectors remain unvalidated. The idle-start → failure association is unaffected, since it uses the completion label.
 
