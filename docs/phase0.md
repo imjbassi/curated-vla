@@ -31,7 +31,7 @@ The full verification is the Phase 2 control (post-train `smolvla_base` with our
 | Item | Value |
 |---|---|
 | Host | Windows 11, Ryzen 5 7600 (6C/12T, has iGPU), 31 GB RAM |
-| WSL2 | Ubuntu 24.04, 15.5 GB RAM visible (WSL default: half of host) |
+| WSL2 | Ubuntu 24.04, 15.5 GB RAM visible (WSL default: half of host); disk moved to `D:\WSL\Ubuntu` on 2026-10-04 (`wsl --manage Ubuntu --move`) to make room for ~520 GB of pretraining video |
 | GPU | RTX 4070, 12 GB (≈10.8 GB free with desktop running), driver 610.62 |
 | Python / PyTorch | 3.12.3 / 2.11.0+cu130 |
 | LeRobot | 0.6.1 (`lerobot[smolvla,libero]`) |

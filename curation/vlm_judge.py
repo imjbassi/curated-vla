@@ -90,7 +90,12 @@ def main() -> None:
         paths = [d / f"{r.episode_index:06d}_{name}.jpg" for name in names]
         if not all(p.exists() for p in paths):
             continue
-        rows.append(dict(key=r.key, vlm_p_yes=judge.p_yes_frames([Image.open(p) for p in paths], r.task)))
+        try:
+            images = [Image.open(p).convert("RGB") for p in paths]
+        except OSError as e:  # e.g. a frame truncated when WSL shut down mid-write
+            print(f"skip {r.key}: {e}", flush=True)
+            continue
+        rows.append(dict(key=r.key, vlm_p_yes=judge.p_yes_frames(images, r.task)))
         if n % 200 == 0:  # checkpoint progress
             done = pd.concat([done, pd.DataFrame(rows)], ignore_index=True)
             done.to_parquet(args.out)
