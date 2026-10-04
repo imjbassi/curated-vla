@@ -150,6 +150,24 @@ Run on all 34,156 episodes with frames (`curation/vlm_judge.py`, ~1 h on the 407
 
 Across sources, the judge's flag rate does not track the hand-labeled failure rate: it flags 63% of berkeley_autolab_ur5 (0 labeled failures) and only 22% of fmb (60% labeled failures). Its scores largely reflect the scene and camera, not task success. **Not usable as a filter.**
 
+### Failure detector iteration (2026-10-04)
+
+`python -m curation.failure_eval LABELS --configs ...`: frames sampled evenly from each labeled clip; AUROC vs hand-labeled completion on the same 187 episodes ("unclear" and the empty clip excluded). Per-source AUROC is blank where a source had no labeled failures.
+
+| config | AUROC | community_v1 | community_v2 | fmb | roboturk | taco_play | utaustin_mutex | s/episode | peak VRAM |
+|---|---|---|---|---|---|---|---|---|---|
+| Qwen3-VL-4B, 2 frames | 0.73 | 0.63 | 0.75 | 0.78 | 1.00 | 0.86 | 0.30 | 0.31 | 9.1 GB |
+| Qwen3-VL-4B, 8 frames | 0.83 | 0.91 | 0.82 | 0.99 | 0.71 | 0.50 | 0.31 | 0.89 | 9.4 GB |
+| Qwen3-VL-8B (4-bit), 2 frames | 0.77 | 0.78 | 0.71 | 0.92 | 0.91 | 0.73 | 0.38 | 0.21 | 7.0 GB |
+| **Qwen3-VL-8B (4-bit), 8 frames** | **0.84** | 0.89 | 0.80 | 0.99 | 0.85 | 0.86 | 0.57 | 0.44 | 11.5 GB |
+
+(The 2-frame 4B number here, 0.73, differs from the 0.69 above because frames now come from the labeling clips rather than separately extracted frames.)
+
+- **More frames matter more than model size**: 2 → 8 frames adds ~0.07–0.09 AUROC for both models; 4B → 8B adds ~0.01–0.04.
+- The 8B model is more even across sources (utaustin_mutex 0.57 vs 0.31, taco_play 0.86 vs 0.50).
+- **Selection caveat:** the best config was picked on the same 187 labels it is scored on, so 0.84 is optimistic. It must be confirmed on fresh labels before being used as a Phase 3 filter.
+- **Cost to apply everywhere:** the population frames are first/mid/last only, so 8-frame scoring needs a new frame pass over all videos (another multi-hour stream) plus ~4 h of GPU at 0.44 s/episode.
+
 ### Conclusions
 
 1. **Don't filter on truncation, flailing or spike as built.** No agreement with labels and no relationship to failure.
