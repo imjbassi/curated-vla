@@ -1,6 +1,6 @@
 # Phase 1: Data audit
 
-Status (2026-10-04): audit and validation done. **Idle detectors validated** (like-for-like pass: start κ = 1.00, end κ = 0.75) and idle-at-start predicts failure. Truncation, flailing and spike did not validate. Task failure is the main problem; an 8-frame VLM judge reaches AUROC 0.84 on the labeled sample (vs 0.69 for the first version) and needs confirmation on fresh labels.
+Status (2026-10-04): audit and validation done. **Two filters validated**: idle (like-for-like pass: start κ = 1.00, end κ = 0.75) and a failure judge (Qwen3-VL-8B, 8 frames: held-out AUROC 0.93, 95% CI 0.82–1.00 on 100 fresh episodes). Truncation, flailing and spike did not validate. Population scoring with the failure judge is running.
 
 ## Datasets
 
@@ -178,6 +178,27 @@ All four idle-end disagreements are within 0.8 s of the threshold (detector meas
 - The 8B model is more even across sources (utaustin_mutex 0.57 vs 0.31, taco_play 0.86 vs 0.50).
 - **Selection caveat:** the best config was picked on the same 187 labels it is scored on, so 0.84 is optimistic. It must be confirmed on fresh labels before being used as a Phase 3 filter.
 - **Cost to apply everywhere:** the population frames are first/mid/last only, so 8-frame scoring needs a new frame pass over all videos (another multi-hour stream) plus ~4 h of GPU at 0.44 s/episode.
+
+### Failure detector: held-out confirmation (2026-10-04)
+
+The configuration was fixed in advance: **Qwen3-VL-8B, 4-bit, 8 frames**. A fresh completion-only pass labeled 100 new episodes, drawn uniformly at random, 12–13 per source, with no overlap with any earlier label (`curation/sample_completion.py`, `label_server --page completion`). Labels: [`labels/phase1_completion/`](../labels/phase1_completion/).
+
+Labels: 80 yes, 9 no, 11 unclear. The 9 failures: fmb 6, community_v2 2, roboturk 1. **Random-sample failure rate: 10%** (9 / 89); the first sample's 19% was inflated by its oversampling of flagged episodes.
+
+| config | AUROC (held-out) | 95% bootstrap CI |
+|---|---|---|
+| **Qwen3-VL-8B, 4-bit, 8 frames (pre-registered)** | **0.93** | 0.82 – 1.00 |
+| Qwen3-VL-4B, 8 frames (secondary) | 0.93 | 0.82 – 1.00 |
+
+Operating points for the 8B judge (flag = P(yes) below threshold):
+
+| threshold | flagged | precision (failure) | recall (failure) |
+|---|---|---|---|
+| < 0.01 | 7% | 1.00 | 0.67 |
+| < 0.05 | 15% | 0.54 | 0.78 |
+| < 0.10 | 25% | 0.36 | 0.89 |
+
+**Confirmed, with wide error bars.** The held-out AUROC is not lower than the selection-sample estimate (0.84), so the choice did not overfit. But only 9 failures support it, 6 from fmb, whose failures are easy to see, so the point estimate is likely optimistic and the lower bound (0.82) is the safer number. The 4B run needed 13.7 GB here (it spilled past VRAM and ran 3× slower), so the 8B in 4-bit is the practical choice.
 
 ### Conclusions
 

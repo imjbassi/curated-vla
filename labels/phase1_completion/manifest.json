@@ -1,0 +1,602 @@
+[
+ {
+  "label_id": "c000",
+  "task": "Pick up the purple object.",
+  "duration_s": 33.8,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c001",
+  "task": "\\nWith care, position your gripper close to the oven tray handle.\\nMake sure to grip the handle tightly.\\nDelicately and attentively pull the tray out from the oven.",
+  "duration_s": 8.8,
+  "fps": 20.0
+ },
+ {
+  "label_id": "c002",
+  "task": "create tower",
+  "duration_s": 16.5,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c003",
+  "task": "Grasp a lego block and put it in the bin.",
+  "duration_s": 13.6,
+  "fps": 30.0
+ },
+ {
+  "label_id": "c004",
+  "task": "Pick up the purple object.",
+  "duration_s": 28.5,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c005",
+  "task": "",
+  "duration_s": 7.7,
+  "fps": 30.0
+ },
+ {
+  "label_id": "c006",
+  "task": "put the ranch bottle into the pot",
+  "duration_s": 18.6,
+  "fps": 5.0
+ },
+ {
+  "label_id": "c007",
+  "task": "Grasp a lego block and put it in the bin.",
+  "duration_s": 23.4,
+  "fps": 30.0
+ },
+ {
+  "label_id": "c008",
+  "task": "place the black bowl in the sink",
+  "duration_s": 9.1,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c009",
+  "task": "turn on the green light",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "c010",
+  "task": "Grasp red, green, yellow ducks and put them in the box.",
+  "duration_s": 12.9,
+  "fps": 30.0
+ },
+ {
+  "label_id": "c011",
+  "task": "sweep the green cloth to the left side of the table",
+  "duration_s": 18.0,
+  "fps": 5.0
+ },
+ {
+  "label_id": "c012",
+  "task": "layout laundry",
+  "duration_s": 12.9,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c013",
+  "task": "Pick up the purple object.",
+  "duration_s": 28.1,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c014",
+  "task": "create tower",
+  "duration_s": 17.3,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c015",
+  "task": "place the grasped pink object in the drawer",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "c016",
+  "task": "Grasp a lego block and put it in the bin.",
+  "duration_s": 19.4,
+  "fps": 30.0
+ },
+ {
+  "label_id": "c017",
+  "task": "push the pink block towards the left",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "c018",
+  "task": "test1",
+  "duration_s": 8.3,
+  "fps": 30.0
+ },
+ {
+  "label_id": "c019",
+  "task": "Grasp the lego brick and put it in the box.",
+  "duration_s": 19.9,
+  "fps": 30.0
+ },
+ {
+  "label_id": "c020",
+  "task": "pick up the apple fruit",
+  "duration_s": 8.0,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c021",
+  "task": "\\nPlease locate the crimson dish within your space.\\nMove your hand towards it gently.\\nTenderly hold the bowl carefully using your fingers and raise it.\\nWith caution, shift it towards the basket.\\nKindly let loose of the dish to drop it in the basket.",
+  "duration_s": 7.9,
+  "fps": 20.0
+ },
+ {
+  "label_id": "c022",
+  "task": "Grasp a lego figure and put it in the box.",
+  "duration_s": 13.1,
+  "fps": 30.0
+ },
+ {
+  "label_id": "c023",
+  "task": "place the orange fruit in the black bowl",
+  "duration_s": 4.5,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c024",
+  "task": "layout laundry",
+  "duration_s": 8.5,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c025",
+  "task": "pick up the yellow cup",
+  "duration_s": 5.7,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c026",
+  "task": "go push the yellow block to the left",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "c027",
+  "task": "place the black bowl in the table",
+  "duration_s": 5.0,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c028",
+  "task": "pick up the blue cup and put it into the brown cup.",
+  "duration_s": 20.8,
+  "fps": 5.0
+ },
+ {
+  "label_id": "c029",
+  "task": "test1",
+  "duration_s": 19.7,
+  "fps": 30.0
+ },
+ {
+  "label_id": "c030",
+  "task": "put the ranch bottle into the pot",
+  "duration_s": 17.0,
+  "fps": 5.0
+ },
+ {
+  "label_id": "c031",
+  "task": "place the milk dairy in the white plate",
+  "duration_s": 7.0,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c032",
+  "task": "sweep the green cloth to the left side of the table",
+  "duration_s": 14.8,
+  "fps": 5.0
+ },
+ {
+  "label_id": "c033",
+  "task": "Pick up the blue object.",
+  "duration_s": 11.1,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c034",
+  "task": "place the green cup in the oven",
+  "duration_s": 7.4,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c035",
+  "task": "put the ranch bottle into the pot",
+  "duration_s": 18.4,
+  "fps": 5.0
+ },
+ {
+  "label_id": "c036",
+  "task": "Pick up the red object.",
+  "duration_s": 13.0,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c037",
+  "task": "move to the white box and store the yellow object",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "c038",
+  "task": "turn off the blue light lamp",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "c039",
+  "task": "sweep the green cloth to the left side of the table",
+  "duration_s": 16.0,
+  "fps": 5.0
+ },
+ {
+  "label_id": "c040",
+  "task": "object search",
+  "duration_s": 8.4,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c041",
+  "task": "layout laundry",
+  "duration_s": 4.5,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c042",
+  "task": "place the yellow block inside the box",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "c043",
+  "task": "layout laundry",
+  "duration_s": 5.4,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c044",
+  "task": "Grasp a lego block and put it in the bin.",
+  "duration_s": 12.0,
+  "fps": 30.0
+ },
+ {
+  "label_id": "c045",
+  "task": "Grasp items from white bowl and place in black tray",
+  "duration_s": 30.3,
+  "fps": 30.0
+ },
+ {
+  "label_id": "c046",
+  "task": "\\nKindly guide your pinchers towards the book laid out on the table.\\nEnsure a firm grip on the book using your pinchers.\\nNow, move both the pinchers and the book to the foremost compartment of the rack.\\nThen, gently free the book into the leading segment of the rack.",
+  "duration_s": 10.0,
+  "fps": 20.0
+ },
+ {
+  "label_id": "c047",
+  "task": "pick up the green cup",
+  "duration_s": 5.3,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c048",
+  "task": "put the ranch bottle into the pot",
+  "duration_s": 23.6,
+  "fps": 5.0
+ },
+ {
+  "label_id": "c049",
+  "task": "Move along the line on the paper from start to end.",
+  "duration_s": 8.3,
+  "fps": 30.0
+ },
+ {
+  "label_id": "c050",
+  "task": "pick up the green cup",
+  "duration_s": 9.9,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c051",
+  "task": "Pick a plaster roll and place it to the blue sticker.",
+  "duration_s": 14.8,
+  "fps": 30.0
+ },
+ {
+  "label_id": "c052",
+  "task": "Grasp a lego figure and put it in the box.",
+  "duration_s": 12.3,
+  "fps": 30.0
+ },
+ {
+  "label_id": "c053",
+  "task": "place the steak meat in the sink",
+  "duration_s": 6.3,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c054",
+  "task": "\\nPosition your gripper near the granola bar, please.\\nLightly grip the granola bar with your gripping tool.\\nRelocate your gripper along with the granola bar toward the leading division of the caddy with caution.\\nGently release the granola bar into the leading division of the caddy.",
+  "duration_s": 8.2,
+  "fps": 20.0
+ },
+ {
+  "label_id": "c055",
+  "task": "Pick up the blue cube and place it on the paper.",
+  "duration_s": 21.0,
+  "fps": 30.0
+ },
+ {
+  "label_id": "c056",
+  "task": "Please reach out your grabber to the yellow dish. Tenderly grip the yellow dish using your grabber. Set the yellow dish on the baking sheet. Posit your grabber on the rim of the baking sheet carrying the yellow dish. Mindfully slide the baking sheet with the yellow dish into the oven. Let go of your grabber's hold on the baking sheet's edge when it is entirely in the oven.",
+  "duration_s": 19.9,
+  "fps": 20.0
+ },
+ {
+  "label_id": "c057",
+  "task": "object search",
+  "duration_s": 5.0,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c058",
+  "task": "Kindly position your hand close to the oven tray's handle. Softly yet firmly grasp the handle using your hand. Slowly and with caution, draw the tray out until it is fully stretched out.",
+  "duration_s": 10.7,
+  "fps": 20.0
+ },
+ {
+  "label_id": "c059",
+  "task": "Please shift your gripper toward the book. Carefully hold the book with your gripper. Gently transport the book using your gripper to the caddy's front section. Safely let the book go into the caddy's front area.",
+  "duration_s": 10.3,
+  "fps": 20.0
+ },
+ {
+  "label_id": "c060",
+  "task": "take the tiger out of the red bowl and put it in the grey bowl",
+  "duration_s": 21.8,
+  "fps": 5.0
+ },
+ {
+  "label_id": "c061",
+  "task": "Pick up the yellow object.",
+  "duration_s": 16.1,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c062",
+  "task": "Pick up the purple object.",
+  "duration_s": 29.4,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c063",
+  "task": "Extend the gripper towards the oven tray handle.\\nGrasp the handle and carefully pull the tray out of the oven.\\nMove the gripper above the red bowl.\\nGrab the red bowl gently.\\nLift the bowl and place it onto the oven tray.",
+  "duration_s": 20.6,
+  "fps": 20.0
+ },
+ {
+  "label_id": "c064",
+  "task": "pick up the yellow block",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "c065",
+  "task": "Extarct the molar and put it somewhere.",
+  "duration_s": 6.4,
+  "fps": 30.0
+ },
+ {
+  "label_id": "c066",
+  "task": "pick up the blue cup and put it into the brown cup.",
+  "duration_s": 23.4,
+  "fps": 5.0
+ },
+ {
+  "label_id": "c067",
+  "task": "Grab the candle wick by the aluminium plate and place it in the box.",
+  "duration_s": 11.1,
+  "fps": 30.0
+ },
+ {
+  "label_id": "c068",
+  "task": "move to the drawer, then place the yellow object",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "c069",
+  "task": "test1",
+  "duration_s": 32.5,
+  "fps": 30.0
+ },
+ {
+  "label_id": "c070",
+  "task": "\\nWith care, position your gripper close to the oven tray handle.\\nMake sure to grip the handle tightly.\\nDelicately and attentively pull the tray out from the oven.",
+  "duration_s": 10.2,
+  "fps": 20.0
+ },
+ {
+  "label_id": "c071",
+  "task": "Grasp a block and put it in a cup.",
+  "duration_s": 14.9,
+  "fps": 30.0
+ },
+ {
+  "label_id": "c072",
+  "task": "layout laundry",
+  "duration_s": 3.4,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c073",
+  "task": "\\nPlease spot the blue cup positioned before you and pinpoint its location.\\nCarefully open your gripper and guide it in the direction of the cup.\\nSecure a firm hold on the blue cup using your gripper, ensuring not to crush or let it slip from your grasp.\\nWith caution, shift the gripper carrying the cup above the baking sheet.\\nTenderly set the cup down on the baking sheet, and unclasp your gripper to release the cup.",
+  "duration_s": 7.8,
+  "fps": 20.0
+ },
+ {
+  "label_id": "c074",
+  "task": "Grab stuffed animal and throw it on the dot.",
+  "duration_s": 9.5,
+  "fps": 30.0
+ },
+ {
+  "label_id": "c075",
+  "task": "Pick up the blue object.",
+  "duration_s": 9.7,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c076",
+  "task": "put the ranch bottle into the pot",
+  "duration_s": 19.0,
+  "fps": 5.0
+ },
+ {
+  "label_id": "c077",
+  "task": "Put the banana into the red bowl.",
+  "duration_s": 23.4,
+  "fps": 30.0
+ },
+ {
+  "label_id": "c078",
+  "task": "Pick up the blue object.",
+  "duration_s": 13.5,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c079",
+  "task": "object search",
+  "duration_s": 19.3,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c080",
+  "task": "put the pink object inside the left cabinet",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "c081",
+  "task": "object search",
+  "duration_s": 9.3,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c082",
+  "task": "pickup the toy and place it in white bin",
+  "duration_s": 12.6,
+  "fps": 15.0
+ },
+ {
+  "label_id": "c083",
+  "task": "place the orange fruit in the gray bowl",
+  "duration_s": 6.6,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c084",
+  "task": "Grasp a yellow duck and put it in the box.",
+  "duration_s": 15.0,
+  "fps": 30.0
+ },
+ {
+  "label_id": "c085",
+  "task": "\\nDraw close to the oven tray handle and pull it smoothly until the tray is entirely removed.\\nFind the blue cup before you and put it gently onto the wide-open tray.",
+  "duration_s": 23.1,
+  "fps": 20.0
+ },
+ {
+  "label_id": "c086",
+  "task": "Stack the balls on top of each other.",
+  "duration_s": 9.2,
+  "fps": 30.0
+ },
+ {
+  "label_id": "c087",
+  "task": "Pick up the purple object.",
+  "duration_s": 25.5,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c088",
+  "task": "create tower",
+  "duration_s": 4.0,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c089",
+  "task": "Pick up the blue object.",
+  "duration_s": 10.6,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c090",
+  "task": "Grasp a lego block and put it in the bin.",
+  "duration_s": 58.4,
+  "fps": 30.0
+ },
+ {
+  "label_id": "c091",
+  "task": "take the tiger out of the red bowl and put it in the grey bowl",
+  "duration_s": 17.8,
+  "fps": 5.0
+ },
+ {
+  "label_id": "c092",
+  "task": "put the yellow block on the table",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "c093",
+  "task": "Kindly position your hand close to the oven tray's handle. Softly yet firmly grasp the handle using your hand. Slowly and with caution, draw the tray out until it is fully stretched out.",
+  "duration_s": 10.1,
+  "fps": 20.0
+ },
+ {
+  "label_id": "c094",
+  "task": "place the yellow object on the table",
+  "duration_s": 4.4,
+  "fps": 15.0
+ },
+ {
+  "label_id": "c095",
+  "task": "Grasp a tape and put it in the bin.",
+  "duration_s": 13.1,
+  "fps": 30.0
+ },
+ {
+  "label_id": "c096",
+  "task": "pick up the orange fruit",
+  "duration_s": 5.3,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c097",
+  "task": "Pick up the green object.",
+  "duration_s": 17.2,
+  "fps": 10.0
+ },
+ {
+  "label_id": "c098",
+  "task": "take the tiger out of the red bowl and put it in the grey bowl",
+  "duration_s": 21.4,
+  "fps": 5.0
+ },
+ {
+  "label_id": "c099",
+  "task": "Pick up the green object.",
+  "duration_s": 8.8,
+  "fps": 10.0
+ }
+]
