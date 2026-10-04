@@ -16,7 +16,8 @@ from datetime import datetime, timezone
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-PAGES = {"full": Path(__file__).with_name("label_page.html"), "idle": Path(__file__).with_name("label_idle.html")}
+PAGES = {"full": Path(__file__).with_name("label_page.html"), "idle": Path(__file__).with_name("label_idle.html"),
+         "completion": Path(__file__).with_name("label_completion.html")}
 
 
 def make_handler(label_dir: Path, page: Path = PAGES["full"]):

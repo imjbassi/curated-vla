@@ -73,6 +73,8 @@ def main() -> None:
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--model", default=MODEL)
     parser.add_argument("--keys", type=Path, help="optional parquet with a 'key' column to restrict to")
+    parser.add_argument("--n-frames", type=int, default=2, help="2 = first+last; N reads f0..f{N-1} from frames.py")
+    parser.add_argument("--quant4", action="store_true", help="load the model in 4-bit (e.g. the 8B on 12 GB)")
     args = parser.parse_args()
 
     df = pd.read_parquet(args.scores, columns=["key", "source", "subset", "episode_index", "task"])
@@ -80,14 +82,15 @@ def main() -> None:
         df = df[df["key"].isin(pd.read_parquet(args.keys)["key"])]
     done = pd.read_parquet(args.out) if args.out.exists() else pd.DataFrame(columns=["key", "vlm_p_yes"])
     todo = df[~df["key"].isin(set(done["key"]))]
-    judge = Judge(args.model)
+    judge = Judge(args.model, quant4=args.quant4)
+    names = ["first", "last"] if args.n_frames == 2 else [f"f{k}" for k in range(args.n_frames)]
     rows = []
     for n, r in enumerate(todo.itertuples(), 1):
         d = args.frames / r.source / (r.subset or "_")
-        first, last = d / f"{r.episode_index:06d}_first.jpg", d / f"{r.episode_index:06d}_last.jpg"
-        if not (first.exists() and last.exists()):
+        paths = [d / f"{r.episode_index:06d}_{name}.jpg" for name in names]
+        if not all(p.exists() for p in paths):
             continue
-        rows.append(dict(key=r.key, vlm_p_yes=judge.p_yes(Image.open(first), Image.open(last), r.task)))
+        rows.append(dict(key=r.key, vlm_p_yes=judge.p_yes_frames([Image.open(p) for p in paths], r.task)))
         if n % 200 == 0:  # checkpoint progress
             done = pd.concat([done, pd.DataFrame(rows)], ignore_index=True)
             done.to_parquet(args.out)
