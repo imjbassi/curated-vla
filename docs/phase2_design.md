@@ -44,6 +44,17 @@ Filters used are exactly the Phase 1 validated ones; truncation, flailing and sp
 - Post-training: LIBERO via stock `lerobot-train`, identical settings for our model and the `smolvla_base` control.
 - Control gate: if `smolvla_base` post-trained with our settings does not land near published numbers (see README), stop and debug before Phase 3.
 
+## Progress (2026-10-05)
+
+| Step | Status |
+|---|---|
+| `PoolDataset` (`pretrain/pool.py`) | ✅ built on the 6 OXE sources (10,935 episodes, 1.3M frames). Per-source actions come out mean ≈ 0 / std ≈ 1, padded dims exactly 0, end-of-episode `action_is_pad` correct, camera1 / camera2 frames verified visually; roboturk (no wrist camera) gets a masked blank. |
+| Data throughput | ❌ → ✅ The Hub videos are AV1 with long keyframe intervals: a random frame read had median 21 ms, **p90 197 ms**, capping loading at ~25 samples/s. `pretrain/transcode.py` re-encodes the used cameras to H.264, 256 px, keyframe every 10 frames, timestamps preserved: **83 samples/s** with 10 workers. Converted frames match the originals. |
+| Pretraining loop (`pretrain/train.py`) | ✅ 400-step smoke run on OXE: loss 0.7 → 0.5, 8.5 GB VRAM, checkpoints in `pretrained_model` format. |
+| Post-training from our checkpoint | ✅ stock `lerobot-train --policy.path=<ours>` on LIBERO: loads, loss 1.62 → 0.99 in 150 steps, normalizer stats replaced with LIBERO's, action head resized to 7-D; `lerobot-eval` runs. |
+| Training throughput | ⚠️ 25 samples/s in the smoke run (34% waiting on data): 10 loader workers + the training process share 12 cores. To tune before the full run. |
+| Community pool | ⏳ downloading (~520 GB at ~9 MB/s, connection-limited); then index build + transcode. |
+
 ## Build order
 
 1. `PoolDataset` + unit checks (shapes, normalization, padding masks, camera mapping) on the small OXE sources while community videos download.
