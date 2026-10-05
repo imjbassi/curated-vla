@@ -150,10 +150,13 @@ def _resize_pad(img: torch.Tensor, size: int) -> torch.Tensor:
 @lru_cache(maxsize=64)
 def _decoder(path: str, pid: int, seek_mode: str = "approximate"):
     """Per-process decoder cache. The pid is part of the key: a decoder opened in the parent and
-    inherited by forked DataLoader workers shares FFmpeg state and corrupts reads."""
+    inherited by forked DataLoader workers shares FFmpeg state and corrupts reads.
+
+    One FFmpeg thread per decoder: frames are small (256 px), so multi-threaded decode only adds
+    thread overhead (12 ms vs 1.4 ms per frame) and oversubscribes the cores across workers."""
     from torchcodec.decoders import VideoDecoder
 
-    return VideoDecoder(path, seek_mode=seek_mode)
+    return VideoDecoder(path, seek_mode=seek_mode, num_ffmpeg_threads=1)
 
 
 class PoolDataset(Dataset):

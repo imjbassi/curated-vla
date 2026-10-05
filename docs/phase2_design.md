@@ -52,7 +52,7 @@ Filters used are exactly the Phase 1 validated ones; truncation, flailing and sp
 | Data throughput | ❌ → ✅ The Hub videos are AV1 with long keyframe intervals: a random frame read had median 21 ms, **p90 197 ms**, capping loading at ~25 samples/s. `pretrain/transcode.py` re-encodes the used cameras to H.264, 256 px, keyframe every 10 frames, timestamps preserved: **83 samples/s** with 10 workers. Converted frames match the originals. |
 | Pretraining loop (`pretrain/train.py`) | ✅ 400-step smoke run on OXE: loss 0.7 → 0.5, 8.5 GB VRAM, checkpoints in `pretrained_model` format. |
 | Post-training from our checkpoint | ✅ stock `lerobot-train --policy.path=<ours>` on LIBERO: loads, loss 1.62 → 0.99 in 150 steps, normalizer stats replaced with LIBERO's, action head resized to 7-D; `lerobot-eval` runs. |
-| Training throughput | ⚠️ 25 samples/s in the smoke run (34% waiting on data): 10 loader workers + the training process share 12 cores. To tune before the full run. |
+| Training throughput | ✅ `pretrain/bench.py`. GPU ceiling (fixed batch, fp32, batch 32): **50 samples/s**. Was 25–31 samples/s with training waiting 37–51% on data: torchcodec's default multi-threaded decode cost 12 ms per 256 px frame and oversubscribed the cores. One FFmpeg thread per decoder: 1.5 ms per frame, and **43.6 samples/s with 8 workers** (88% of ceiling, 14% data wait); 10 workers is slower (38.6). bf16 autocast does not help (46 ceiling; the VLM already runs in bf16). At ~44 samples/s, a 5M-sample pretraining run takes **~32 h**. |
 | Community pool | ⏳ downloading (~520 GB at ~9 MB/s, connection-limited); then index build + transcode. |
 
 ## Build order

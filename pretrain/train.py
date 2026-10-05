@@ -80,7 +80,7 @@ def main() -> None:
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--samples", type=int, default=5_000_000, help="training budget in samples")
     parser.add_argument("--batch-size", type=int, default=32)
-    parser.add_argument("--workers", type=int, default=10)
+    parser.add_argument("--workers", type=int, default=8, help="8 was fastest on 12 cores (pretrain/bench.py)")
     parser.add_argument("--image-size", type=int, default=256)
     parser.add_argument("--save-every", type=int, default=5000, help="steps")
     parser.add_argument("--log-every", type=int, default=50)
