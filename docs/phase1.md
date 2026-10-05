@@ -200,6 +200,26 @@ Operating points for the 8B judge (flag = P(yes) below threshold):
 
 **Confirmed, with wide error bars.** The held-out AUROC is not lower than the selection-sample estimate (0.84), so the choice did not overfit. But only 9 failures support it, 6 from fmb, whose failures are easy to see, so the point estimate is likely optimistic and the lower bound (0.82) is the safer number. The 4B run needed 13.7 GB here (it spilled past VRAM and ran 3× slower), so the 8B in 4-bit is the practical choice.
 
+### Failure judge on the full population (2026-10-05)
+
+8 evenly spaced frames per episode (`curation.frames --n-frames 8`, 6 parallel shards), then the pre-registered judge (Qwen3-VL-8B, 4-bit) over all 34,183 episodes with video (~5 h on the 4070). Flag = P(yes) < 0.05. Labeled failure rate pools the first pass and the held-out pass ("unclear" excluded).
+
+| source | scored | failure flag | idle flag | either | labeled failure rate (n) |
+|---|---|---|---|---|---|
+| community_v1 | 11,108 | 16.7% | 18.4% | 32.0% | 14% (36) |
+| community_v2 | 12,146 | 18.0% | 28.1% | 40.9% | 26% (34) |
+| taco_play | 3,602 | **24.8%** | 0% | 24.8% | **3% (33)** |
+| jaco_play | 1,085 | 3.2% | 0% | 3.2% | 0% (37) |
+| berkeley_autolab_ur5 | 997 | 5.2% | 0% | 5.2% | 0% (37) |
+| utaustin_mutex | 1,498 | 19.3% | 0% | 19.3% | 11% (37) |
+| roboturk | 1,943 | 23.3% | 0.1% | 23.3% | 25% (24) |
+| fmb | 1,804 | 39.5% | 0% | 39.5% | 55% (38) |
+| **all** | **34,183** | **19.3%** | **16.0%** | **32.4%** | |
+
+- Unlike the first VLM version, **flag rates now track labeled failure rates across sources**, with one exception.
+- **taco_play is over-flagged** (25% vs 3% labeled): its episodes are fixed 4.4 s windows cut from continuous play, which look unfinished. Exclude taco_play from failure filtering.
+- **Idle and failure flags are nearly independent**: an idle-start flag barely changes the chance of a failure flag (20.8% vs 19.2%). The two filters remove different episodes.
+
 ### Conclusions
 
 1. **Don't filter on truncation, flailing or spike as built.** No agreement with labels and no relationship to failure.
