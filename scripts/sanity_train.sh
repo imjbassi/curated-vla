@@ -8,6 +8,8 @@ set -euo pipefail
 
 STEPS="${1:-3000}"
 BATCH_SIZE="${2:-32}"
+BASE_POLICY="${BASE_POLICY:-lerobot/smolvla_base}"  # or a local pretrained_model dir from pretrain/train.py
+TASK_IDS_EVAL="${TASK_IDS_EVAL:-[0,1]}"
 CVLA_HOME="${CVLA_HOME:-$HOME/cvla}"
 HERE="$(cd "$(dirname "$0")" && pwd)"
 # shellcheck disable=SC1091
@@ -17,11 +19,11 @@ source "$CVLA_HOME/venv/bin/activate"
 # image2 (wrist). Providing a subset of the policy's cameras is allowed.
 RENAME='{"observation.images.image": "observation.images.camera1", "observation.images.image2": "observation.images.camera2"}'
 
-OUT="$CVLA_HOME/outputs/train/sanity_smolvla_base_libero_${STEPS}_$(date +%Y%m%d-%H%M%S)"
+OUT="$CVLA_HOME/outputs/train/sanity_$(basename "$(dirname "$BASE_POLICY")" | tr '/' '_')_libero_${STEPS}_$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$(dirname "$OUT")"
 
 lerobot-train \
-    --policy.path=lerobot/smolvla_base \
+    --policy.path="$BASE_POLICY" \
     --policy.push_to_hub=false \
     --dataset.repo_id=lerobot/libero \
     --dataset.revision="${LIBERO_REVISION:-a1aaacb7f6cd6ee5fb43120f673cebb0cfea7dd4}" \
@@ -39,5 +41,5 @@ lerobot-train \
 
 CKPT="$OUT/checkpoints/last/pretrained_model"
 ls "$OUT/checkpoints"
-TAG=sanity BATCH_SIZE=10 TASK_IDS="[0,1]" bash "$HERE/../eval/eval_libero.sh" "$CKPT" 1000 libero_object 10 \
+TAG=sanity BATCH_SIZE=10 TASK_IDS="$TASK_IDS_EVAL" bash "$HERE/../eval/eval_libero.sh" "$CKPT" 1000 libero_object 10 \
     --rename_map="$RENAME"
