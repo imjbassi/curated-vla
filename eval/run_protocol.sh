@@ -7,18 +7,24 @@
 #
 # Usage: eval/run_protocol.sh [POLICY] [SEED]
 #   SUITES="libero_10" eval/run_protocol.sh ...   # subset of suites
+#   TAG=name                                      # names eval dirs and the summary (default: policy basename)
+#   EXTRA_EVAL_ARGS="--rename_map=..."            # ONE extra lerobot-eval argument, passed unsplit
+#                                                   (JSON values contain spaces)
 set -euo pipefail
 
 POLICY="${1:-HuggingFaceVLA/smolvla_libero}"
 SEED="${2:-1000}"
 read -r -a SUITES <<< "${SUITES:-libero_object libero_spatial libero_goal libero_10}"
+export TAG="${TAG:-}"
+EXTRA=()
+[ -n "${EXTRA_EVAL_ARGS:-}" ] && EXTRA=("$EXTRA_EVAL_ARGS")
 
 CVLA_HOME="${CVLA_HOME:-$HOME/cvla}"
 HERE="$(cd "$(dirname "$0")" && pwd)"
 RUNS=()
 for suite in "${SUITES[@]}"; do
     for task_id in 0 1 2 3 4 5 6 7 8 9; do
-        TASK_IDS="[$task_id]" bash "$HERE/eval_libero.sh" "$POLICY" "$SEED" "$suite" 10 > /dev/null 2>&1
+        TASK_IDS="[$task_id]" bash "$HERE/eval_libero.sh" "$POLICY" "$SEED" "$suite" 10 "${EXTRA[@]}" > /dev/null 2>&1
         RUNS+=("$(ls -td "$CVLA_HOME"/outputs/eval/*/ | head -1)")
         echo "done: $suite task $task_id -> ${RUNS[-1]}"
     done
@@ -26,4 +32,4 @@ done
 
 # shellcheck disable=SC1091
 source "$CVLA_HOME/venv/bin/activate"
-python "$HERE/summarize.py" "${RUNS[@]}" | tee "$CVLA_HOME/outputs/eval/summary_$(basename "$POLICY")_seed${SEED}.txt"
+python "$HERE/summarize.py" "${RUNS[@]}" | tee "$CVLA_HOME/outputs/eval/summary_${TAG:-$(basename "$POLICY")}_seed${SEED}.txt"

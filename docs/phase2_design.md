@@ -41,7 +41,7 @@ Filters used are exactly the Phase 1 validated ones; truncation, flailing and sp
 
 - Model: `--policy.type=smolvla --policy.load_vlm_weights=true` (SmolVLM2-500M backbone, robotics weights ours).
 - Budget: 5M samples per pretraining run (~26 h at 54 samples/s, batch 32, fp32), per the Phase 0 estimate. Revisit bf16 AMP (broken in 0.6.1) for a ~1.5–2× speedup.
-- Post-training: LIBERO via stock `lerobot-train`, identical settings for our model and the `smolvla_base` control.
+- Post-training: LIBERO via stock `lerobot-train`, identical settings for our model and the `smolvla_base` control (`scripts/posttrain_libero.sh`). **Reduced recipe (decided 2026-10-06): 30k steps × batch 32** (~1M samples, ~5–6 h) instead of the paper's 100k × 64 (~33 h), because Phase 3 needs ~9 post-training runs. The control is judged against our Phase 0 reproduction (72.2%); if it falls well short, it is rerun once at the paper recipe to separate a training-budget gap from a pipeline bug.
 - Control gate: if `smolvla_base` post-trained with our settings does not land near published numbers (see README), stop and debug before Phase 3.
 
 ## Progress (2026-10-05)
