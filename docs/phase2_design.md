@@ -35,6 +35,22 @@ Pretraining uses our own data layer and a thin training loop around LeRobot's Sm
 
 Filters used are exactly the Phase 1 validated ones; truncation, flailing and spike are excluded.
 
+Built by `python -m curation.make_conditions` (lists in [`conditions/`](../conditions/)), seed 1000:
+
+| condition | episodes | frames | flagged | community_v2 share of frames |
+|---|---|---|---|---|
+| A random | 19,490 | 6.97M | 29% | 47.7% |
+| B curated | 24,022 | 6.97M | 0% | 39.9% |
+| C full | 34,189 | 12.23M | 30% | 47.6% |
+
+Two properties to keep in mind when reading A vs B:
+- The filters remove 30% of episodes but **43% of frames**: flagged episodes are longer (idle time adds length). At equal frames, B therefore has **more, shorter episodes** than A (24.0k vs 19.5k).
+- Curation **shifts the source mix** (community_v2: 39.9% of B vs 47.7% of A), because flag rates differ by source.
+
+Both are real consequences of curating, but an A vs B difference cannot be attributed purely to removing bad episodes. A **source-matched random** condition (random episodes within each source, matching B's per-source frames) would isolate within-source episode quality; to be decided for Phase 3.
+
+The **Phase 2 baseline is condition A** (random), so it is also Phase 3's first run.
+
 **Exclusions from the pool**: the community_v2 sub-dataset with no videos (774 episodes); episodes < 10 frames; any episode whose video fails to decode at load time (logged).
 
 ## Training
