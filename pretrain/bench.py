@@ -13,7 +13,7 @@ from pathlib import Path
 import torch
 from torch.utils.data import DataLoader
 
-from pretrain.pool import PoolDataset
+from pretrain.pool import EpisodeBlockSampler, PoolDataset
 from pretrain.train import CAMERAS, make_policy
 
 
@@ -40,6 +40,7 @@ def main() -> None:
     parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--main-threads", type=int, default=0, help="torch threads in the main process (0 = default)")
     parser.add_argument("--bf16", action="store_true", help="bf16 autocast (no GradScaler needed)")
+    parser.add_argument("--block", type=int, default=1, help="frames per episode visit (EpisodeBlockSampler)")
     args = parser.parse_args()
     if args.main_threads:
         torch.set_num_threads(args.main_threads)
@@ -62,8 +63,9 @@ def main() -> None:
     print(f"GPU ceiling (fixed batch): {args.steps * args.batch_size / (time.time() - t):.1f} samples/s", flush=True)
 
     for w in args.workers:
-        loader = DataLoader(ds, batch_size=args.batch_size, shuffle=True, num_workers=w, persistent_workers=True,
-                            prefetch_factor=4, pin_memory=True)
+        sampler = (EpisodeBlockSampler(ds, 10**7, args.block) if args.block > 1 else None)
+        loader = DataLoader(ds, batch_size=args.batch_size, sampler=sampler, shuffle=sampler is None, num_workers=w,
+                            persistent_workers=True, prefetch_factor=4, pin_memory=True)
         it = iter(loader)
         for _ in range(8):  # warm up workers and decoders
             run(next(it))

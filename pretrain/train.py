@@ -25,13 +25,13 @@ from pathlib import Path
 
 import pandas as pd
 import torch
-from torch.utils.data import DataLoader, RandomSampler
+from torch.utils.data import DataLoader
 
 from lerobot.configs.types import FeatureType, NormalizationMode, PolicyFeature
 from lerobot.policies.smolvla.configuration_smolvla import SmolVLAConfig
 from lerobot.policies.smolvla.modeling_smolvla import SmolVLAPolicy
 from lerobot.policies.smolvla.processor_smolvla import make_smolvla_pre_post_processors
-from pretrain.pool import CHUNK, MAX_DIM, PoolDataset
+from pretrain.pool import CHUNK, MAX_DIM, EpisodeBlockSampler, PoolDataset
 
 CAMERAS = ["observation.images.camera1", "observation.images.camera2"]
 
@@ -81,6 +81,8 @@ def main() -> None:
     parser.add_argument("--samples", type=int, default=5_000_000, help="training budget in samples")
     parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--workers", type=int, default=8, help="8 was fastest on 12 cores (pretrain/bench.py)")
+    parser.add_argument("--block", type=int, default=4,
+                        help="frames per episode visit; 4 keeps the GPU fed on the full pool (pretrain/bench.py)")
     parser.add_argument("--image-size", type=int, default=256)
     parser.add_argument("--save-every", type=int, default=5000, help="steps")
     parser.add_argument("--log-every", type=int, default=50)
@@ -94,8 +96,8 @@ def main() -> None:
         keys = set(k["key"])
     ds = PoolDataset(args.index, keys=keys, image_size=args.image_size, video_root=args.video_root)
     steps = math.ceil(args.samples / args.batch_size)
-    sampler = RandomSampler(ds, replacement=False, num_samples=steps * args.batch_size,
-                            generator=torch.Generator().manual_seed(args.seed))
+    assert args.batch_size % args.block == 0, "batch size must be a multiple of --block"
+    sampler = EpisodeBlockSampler(ds, steps * args.batch_size, block=args.block, seed=args.seed)
     loader = DataLoader(ds, batch_size=args.batch_size, sampler=sampler, num_workers=args.workers,
                         persistent_workers=True, prefetch_factor=4, pin_memory=True, drop_last=True)
     print(f"pool: {len(ds.episodes)} episodes, {len(ds)} samples; budget {args.samples} samples = {steps} steps",

@@ -31,7 +31,7 @@ import numpy as np
 import pandas as pd
 import torch
 from huggingface_hub import snapshot_download
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, Sampler
 
 from curation.cameras import _community_mappings, main_camera
 from curation.datasets import SOURCES
@@ -230,6 +230,42 @@ class PoolDataset(Dataset):
             item["observation.images.camera2"] = torch.zeros(3, self.image_size, self.image_size, dtype=torch.uint8)
             item["observation.images.camera2_padding_mask"] = torch.tensor(False)
         return item
+
+
+class EpisodeBlockSampler(Sampler[int]):
+    """Draws frames in blocks of `block` from the same episode.
+
+    Community episodes each have their own video file, so uniform frame sampling
+    opens two new files per sample and starves the GPU (24 samples/s on the full
+    pool). Each block picks an anchor frame uniformly over all frames (so episodes
+    are chosen in proportion to length) plus block-1 more frames uniformly from the
+    same episode; every frame's marginal probability stays uniform, while the
+    worker reuses the episode's open decoders. Keep batch_size a multiple of block
+    so a block is never split across workers.
+    """
+
+    def __init__(self, ds: "PoolDataset", num_samples: int, block: int = 4, seed: int = 0):
+        self.ds, self.num_samples, self.block, self.seed = ds, num_samples, block, seed
+
+    def __len__(self) -> int:
+        return self.num_samples
+
+    def __iter__(self):
+        rng = np.random.default_rng(self.seed)
+        cum = self.ds.cum
+        total = int(cum[-1])
+        n = 0
+        while n < self.num_samples:
+            anchors = rng.integers(0, total, size=4096)
+            eps = np.searchsorted(cum, anchors, side="right") - 1
+            for a, e in zip(anchors, eps):
+                start, length = int(cum[e]), int(cum[e + 1] - cum[e])
+                yield int(a)
+                for t in rng.integers(0, length, size=self.block - 1):
+                    yield start + int(t)
+                n += self.block
+                if n >= self.num_samples:
+                    return
 
 
 def main() -> None:
