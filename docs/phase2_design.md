@@ -85,6 +85,14 @@ The **Phase 2 baseline is condition A** (random), so it is also Phase 3's first 
 
 **7.7 points below the Phase 0 target**, almost entirely from LIBERO-Object (−27); Spatial −7, Goal +2, Long +1. Status: gate not yet passed, pending the budget-vs-bug check below.
 
+**Budget vs bug.** The control's intermediate checkpoints on LIBERO-Object (100 episodes each, same protocol):
+
+| checkpoint | 10k | 20k | 30k | public checkpoint (paper recipe, 100k × 64) |
+|---|---|---|---|---|
+| LIBERO-Object % | 42 | 58 | 63 | 90 |
+
+Success is still rising at 30k (+16, then +5), and training loss was still falling. A pipeline bug (wrong camera mapping, wrong normalization) would show up as a plateau far below target across suites, not as steady improvement concentrated in one suite. The gap is most likely the reduced post-training budget (~1/6 of the paper's samples). Confirming requires the control at the paper recipe.
+
 ## Build order
 
 1. `PoolDataset` + unit checks (shapes, normalization, padding masks, camera mapping) on the small OXE sources while community videos download.
