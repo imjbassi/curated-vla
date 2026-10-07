@@ -1,0 +1,4 @@
+condition,episodes,frames,flagged_frac,berkeley_autolab_ur5,community_v1,community_v2,fmb,jaco_play,roboturk,taco_play,utaustin_mutex
+A_random,19371,6965575,0.296,0.8,41.9,47.6,2.7,0.7,1.5,1.9,2.9
+B_curated,24022,6965483,0.0,1.3,45.0,39.9,3.1,1.1,2.0,3.4,4.1
+C_full,34189,12234899,0.297,0.8,41.8,47.6,2.8,0.6,1.5,1.9,3.0

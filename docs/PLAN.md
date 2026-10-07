@@ -76,6 +76,19 @@ Same post-training, same evaluation, at least 3 seeds each.
 - B matches C: curation lets us use less data for the same performance.
 - No difference: a valid result, reported as such.
 
+### Phase 3 design, fixed before any results (2026-10-07)
+
+- **Conditions: A (random) vs B (curated), 3 seeds each** (6 models). C (full pool) and a source-matched random condition are deferred; add the source-matched condition only if A and B differ, to separate "removed bad episodes" from "changed the source mix" (see `docs/phase2_design.md`).
+- **Filters**: only the Phase 1 validated ones: idle > 3 s at start or end; 8-frame failure judge P(yes) < 0.05 (not applied to taco_play).
+- **Equal size**: A is drawn to the same number of frames as B (6.97M of the 12.2M-frame pool).
+- **What a seed changes** (seeds 1000, 1001, 1002):
+  - A: a *different* random episode subset (pairwise overlap ~57%) and the pretraining / post-training RNG. A's seed-to-seed spread therefore includes subset choice.
+  - B: the same curated list for every seed; only pretraining / post-training RNG.
+- **Training**: identical pretraining budget and post-training recipe for all 6 models.
+- **Evaluation**: full 4-suite LIBERO protocol, evaluation seed fixed at 1000 for every model (paired: same initial states).
+- **Primary outcome**: mean LIBERO success averaged over suites; report mean ± spread over seeds per condition, per-suite results, and the per-seed numbers. Null results are reported as such.
+- **Cost**: ~40 GPU-hours per model (≈26 h pretraining, ≈10 h post-training, ≈4 h eval) → ~10 days on the 4070.
+
 ## Phase 4: Which filters matter (weeks 9–10)
 
 1. Remove one failure type at a time to see which filter drives any improvement.
