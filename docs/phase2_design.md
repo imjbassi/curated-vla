@@ -72,6 +72,19 @@ The **Phase 2 baseline is condition A** (random), so it is also Phase 3's first 
 | Community pool | ✅ downloaded (332 GB on D:, ~6.5 h at ~9 MB/s, connection-limited), indexed and transcoded (25,803 video files, 0 failures; 13 GB). **Full pool: 34,189 episodes, 12.2M frames, 457 sub-datasets.** Matches the Phase 1 audit exactly except the community_v2 sub-dataset with no videos (`Yotofu/so100_sweeper_shoes`): only 774 episodes but **4.29M frames (26% of all audited frames)**, ~3 min per episode; it is the source of community_v2's long episode-length tail. |
 | Full-pool throughput | ❌ → ✅ Community episodes each have their own video file, so uniform frame sampling opened two files per sample: 24 samples/s, 53% data wait. `EpisodeBlockSampler` draws 4 frames per episode visit (anchor uniform over all frames, companions uniform within the episode, so each frame's marginal probability stays uniform): **52.8 samples/s, 0% data wait** (GPU ceiling 52.9). 5M samples ≈ **26 h**. |
 
+## Training-pipeline control (2026-10-06)
+
+`lerobot/smolvla_base` post-trained on LIBERO with the shared reduced recipe (`scripts/posttrain_libero.sh control_smolvla_base lerobot/smolvla_base 1000`: 30k steps × batch 32, 5.4 h, loss 0.40 → 0.33 from step 10k to 30k, still falling), then the full 4-suite protocol (seed 1000, 10 episodes per task, batch 10).
+
+| LIBERO success % | Spatial | Object | Goal | Long | Avg |
+|---|---|---|---|---|---|
+| Control: smolvla_base + our reduced recipe | 68 | **63** | 80 | 47 | **64.5** |
+| Public `smolvla_libero` checkpoint, our eval (Phase 0) | 75 | 90 | 78 | 46 | 72.2 |
+| Community reproduction of the public checkpoint | 63 | 93 | 81 | 56 | 73.3 |
+| SmolVLA paper | 90 | 96 | 92 | 71 | 87.3 |
+
+**7.7 points below the Phase 0 target**, almost entirely from LIBERO-Object (−27); Spatial −7, Goal +2, Long +1. Status: gate not yet passed, pending the budget-vs-bug check below.
+
 ## Build order
 
 1. `PoolDataset` + unit checks (shapes, normalization, padding masks, camera mapping) on the small OXE sources while community videos download.
