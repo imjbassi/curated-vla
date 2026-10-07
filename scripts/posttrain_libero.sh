@@ -7,6 +7,11 @@
 # is judged against our Phase 0 reproduction (72.2%); if it falls well short, the
 # control is rerun once at the paper recipe to separate budget from bugs.
 #
+# Paper-budget control (2026-10-07): the paper's 100k x 64 does not fit in 12 GB and
+# lerobot-train has no gradient accumulation, so it is approximated by the same number
+# of samples at batch 32:
+#   STEPS=200000 SAVE_FREQ=50000 scripts/posttrain_libero.sh control_smolvla_base_paperbudget lerobot/smolvla_base
+#
 # Usage:
 #   scripts/posttrain_libero.sh NAME BASE_POLICY [SEED]
 #   scripts/posttrain_libero.sh control_smolvla_base lerobot/smolvla_base 1000
@@ -39,7 +44,7 @@ lerobot-train \
     --rename_map="$RENAME" \
     --batch_size="$BATCH_SIZE" \
     --steps="$STEPS" \
-    --save_freq=10000 \
+    --save_freq="${SAVE_FREQ:-10000}" \
     --log_freq=200 \
     --num_workers=8 \
     --wandb.enable=false \
