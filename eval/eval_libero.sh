@@ -14,6 +14,10 @@
 # ~2 GB RAM, and policy inference, not simulation, is the bottleneck anyway.
 # Cameras render at RES x RES (default 256, the LIBERO training-data resolution).
 # LeRobot's own default of 360 cost ~7 pp on LIBERO-Object; see docs/phase0.md.
+# Replanning: N_ACTION_STEPS actions are executed per policy call (default 1, i.e. replan
+# every step), part of the protocol for EVERY model. The Phase 0 reference checkpoint and
+# the SmolVLA paper's simulation results use 1; models fine-tuned from smolvla_base inherit
+# its 50 (open-loop chunks), which the paper's Table 13 shows costs ~30 pp. Found 2026-10-08.
 set -euo pipefail
 
 POLICY="${1:-HuggingFaceVLA/smolvla_libero}"
@@ -46,6 +50,7 @@ lerobot-eval \
     --env.max_parallel_tasks=1 \
     --env.observation_height="${RES:-256}" \
     --env.observation_width="${RES:-256}" \
+    --policy.n_action_steps="${N_ACTION_STEPS:-1}" \
     --seed="$SEED" \
     --output_dir="$OUT" \
     "${EXTRA_ARGS[@]}" \

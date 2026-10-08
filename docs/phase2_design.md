@@ -93,6 +93,8 @@ The **Phase 2 baseline is condition A** (random), so it is also Phase 3's first 
 
 Success is still rising at 30k (+16, then +5), and training loss was still falling. A pipeline bug (wrong camera mapping, wrong normalization) would show up as a plateau far below target across suites, not as steady improvement concentrated in one suite. The gap is most likely the reduced post-training budget (~1/6 of the paper's samples). Confirming requires the control at the paper recipe.
 
+**Correction (2026-10-08): evaluation-setting mismatch.** The paper-budget control (200k × 32, 39 h) started its evaluation no better than the 30k control (Object tasks 0–3: 60/30/50/50 vs 60/50/70/40), which contradicted the budget explanation. Cause: models fine-tuned from `smolvla_base` inherit its **`n_action_steps=50`** (execute the whole 50-action chunk open-loop), while the Phase 0 reference checkpoint uses **`n_action_steps=1`** (replan every step), as in the SmolVLA paper's simulation protocol. The paper's Table 13 puts the 50-step setting ~30 pp below. So the 64.5% above, and the 42 → 58 → 63 checkpoint curve, were measured under a different protocol from the target and **do not show a budget gap**. Fix: `eval/eval_libero.sh` now sets `--policy.n_action_steps=1` for every model (`N_ACTION_STEPS` to override). Both controls are being re-evaluated under the corrected protocol.
+
 ## Build order
 
 1. `PoolDataset` + unit checks (shapes, normalization, padding masks, camera mapping) on the small OXE sources while community videos download.
