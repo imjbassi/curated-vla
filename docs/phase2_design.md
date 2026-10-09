@@ -95,6 +95,16 @@ Success is still rising at 30k (+16, then +5), and training loss was still falli
 
 **Correction (2026-10-08): evaluation-setting mismatch.** The paper-budget control (200k × 32, 39 h) started its evaluation no better than the 30k control (Object tasks 0–3: 60/30/50/50 vs 60/50/70/40), which contradicted the budget explanation. Cause: models fine-tuned from `smolvla_base` inherit its **`n_action_steps=50`** (execute the whole 50-action chunk open-loop), while the Phase 0 reference checkpoint uses **`n_action_steps=1`** (replan every step), as in the SmolVLA paper's simulation protocol. The paper's Table 13 puts the 50-step setting ~30 pp below. So the 64.5% above, and the 42 → 58 → 63 checkpoint curve, were measured under a different protocol from the target and **do not show a budget gap**. Fix: `eval/eval_libero.sh` now sets `--policy.n_action_steps=1` for every model (`N_ACTION_STEPS` to override). Both controls are being re-evaluated under the corrected protocol.
 
+**Result under the corrected protocol: the training pipeline is verified (2026-10-09).**
+
+| LIBERO success % | Spatial | Object | Goal | Long | Avg |
+|---|---|---|---|---|---|
+| **Control: smolvla_base + paper budget (200k × 32), replan every step** | **82** | **77** | **80** | **47** | **71.5** |
+| Public `smolvla_libero` checkpoint, our eval (Phase 0 target) | 75 | 90 | 78 | 46 | 72.2 |
+| Community reproduction of the public checkpoint | 63 | 93 | 81 | 56 | 73.3 |
+
+71.5 vs 72.2: within 1 point of the target. Per suite it is above on Spatial (+7) and Goal (+2), equal on Long (+1), and below on Object (−13). Same seed, same 400 episodes, so per-suite differences of a few points are within run-to-run noise. **Gate passed.** The earlier 64.5% was the evaluation setting, not training.
+
 ## Build order
 
 1. `PoolDataset` + unit checks (shapes, normalization, padding masks, camera mapping) on the small OXE sources while community videos download.

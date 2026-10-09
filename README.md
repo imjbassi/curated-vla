@@ -34,7 +34,7 @@ Quality detectors target four failure modes: **truncation**, **idle time**, **fl
 |---|---|---|---|
 | 0 | 1 | Environment works, published SmolVLA LIBERO numbers reproduced, compute estimated | ✅ [report](docs/phase0.md): 72.2% avg, matches community reproduction; paper's 87.3% not reached |
 | 1 | 2–3 | Data audited, quality detectors validated | ✅ [report](docs/phase1.md): idle and failure-judge filters validated (failure judge held-out AUROC 0.93); truncation/flailing/spike did not |
-| 2 | 4–5 | Baseline model pretrained, post-trained, benchmarked | ⏳ |
+| 2 | 4–5 | Baseline model pretrained, post-trained, benchmarked | 🔶 training pipeline verified: `smolvla_base` control through our pipeline = 71.5% vs 72.2% target ([design](docs/phase2_design.md)); baseline pretraining next |
 | 3 | 6–8 | Curated vs random results | ⏳ |
 | 4 | 9–10 | Per-filter ablations and dose-response | ⏳ |
 | 5 | 11–12 | Repo, preprint, model + label release, video | ⏳ |
@@ -53,7 +53,9 @@ The Phase 0 gate verifies the **evaluation harness**, by matching an independent
 | **Gap: community − paper** | −27 | −3 | −11 | −15 | **−14.0** |
 | **Gap: ours − community** | +12 | −3 | −3 | −10 | **−1.1** |
 
-The public checkpoint scores about 14 points below the paper's headline when others evaluate it too, so we treat that gap as belonging to the checkpoint/paper rather than our harness. (The paper's own ablation, Table 13, reports ~80–83% average.) **The training pipeline is verified separately in Phase 2**: we post-train `lerobot/smolvla_base` on LIBERO with our settings as a control, and stop to debug if it does not land near published numbers.
+The public checkpoint scores about 14 points below the paper's headline when others evaluate it too, so we treat that gap as belonging to the checkpoint/paper rather than our harness. (The paper's own ablation, Table 13, reports ~80–83% average.)
+
+**Training pipeline verified (Phase 2):** `lerobot/smolvla_base` post-trained on LIBERO through our pipeline at the paper's sample budget scores **71.5%** (Spatial 82, Object 77, Goal 80, Long 47) against the 72.2% target. Getting there needed one protocol fix: models fine-tuned from `smolvla_base` inherit open-loop 50-step action chunks, while the reference replans every step; every model is now evaluated replanning every step.
 
 ## Phase 1: How the quality detectors are validated
 
