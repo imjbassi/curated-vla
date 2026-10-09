@@ -35,6 +35,10 @@ RENAME='{"observation.images.image": "observation.images.camera1", "observation.
 OUT="$CVLA_HOME/outputs/posttrain/${NAME}_seed${SEED}"
 mkdir -p "$(dirname "$OUT")"
 
+if [ -d "$OUT/checkpoints/last/pretrained_model" ] && [ -d "$OUT/checkpoints/$(printf '%06d' "$STEPS")" ]; then
+    echo "post-training already done: $OUT"
+else
+rm -rf "$OUT"  # lerobot-train refuses an existing output dir; a partial run restarts
 lerobot-train \
     --policy.path="$BASE_POLICY" \
     --policy.push_to_hub=false \
@@ -51,7 +55,9 @@ lerobot-train \
     --seed="$SEED" \
     --output_dir="$OUT" \
     2>&1 | tee "$OUT.log"
+fi
 
 CKPT="$OUT/checkpoints/last/pretrained_model"
+# TAG names the eval run; run_protocol resumes from its manifest if interrupted.
 TAG="$NAME" EXTRA_EVAL_ARGS="--rename_map=$RENAME" bash "$HERE/../eval/run_protocol.sh" "$CKPT" "$EVAL_SEED" \
     | tee "$OUT.eval.log"

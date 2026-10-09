@@ -105,6 +105,13 @@ Success is still rising at 30k (+16, then +5), and training loss was still falli
 
 71.5 vs 72.2: within 1 point of the target. Per suite it is above on Spatial (+7) and Goal (+2), equal on Long (+1), and below on Object (−13). Same seed, same 400 episodes, so per-suite differences of a few points are within run-to-run noise. **Gate passed.** The earlier 64.5% was the evaluation setting, not training.
 
+**Post-training recipe for Phase 3: 30k × 32.** Re-evaluated with replanning every step, the 30k control scores 68.8% (Spatial 79, Object 74, Goal 76, Long 46), 2.7 points below the paper budget for ~1/7 of the time (5.4 h vs 39 h). All six Phase 3 models use this recipe.
+
+| LIBERO success % | Spatial | Object | Goal | Long | Avg | post-training time |
+|---|---|---|---|---|---|---|
+| Control, 30k × 32 | 79 | 74 | 76 | 46 | **68.8** | 5.4 h |
+| Control, 200k × 32 (paper samples) | 82 | 77 | 80 | 47 | **71.5** | 39 h |
+
 ## Build order
 
 1. `PoolDataset` + unit checks (shapes, normalization, padding masks, camera mapping) on the small OXE sources while community videos download.

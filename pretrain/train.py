@@ -25,6 +25,7 @@ from pathlib import Path
 
 import pandas as pd
 import torch
+from safetensors.torch import load_file
 from torch.utils.data import DataLoader
 
 from lerobot.configs.types import FeatureType, NormalizationMode, PolicyFeature
@@ -63,7 +64,8 @@ def save(out: Path, step: int, policy, pre, post, optimizer, scheduler, args) ->
     policy.save_pretrained(model_dir)
     pre.save_pretrained(model_dir)
     post.save_pretrained(model_dir)
-    torch.save({"step": step, "optimizer": optimizer.state_dict(), "scheduler": scheduler.state_dict()},
+    torch.save({"step": step, "optimizer": optimizer.state_dict(), "scheduler": scheduler.state_dict(),
+                "torch_rng": torch.get_rng_state(), "cuda_rng": torch.cuda.get_rng_state()},  # flow-matching noise
                ckpt / "training_state.pt")
     (ckpt / "args.json").write_text(json.dumps({k: str(v) for k, v in vars(args).items()}, indent=1))
     last = out / "checkpoints" / "last"
@@ -97,11 +99,6 @@ def main() -> None:
     ds = PoolDataset(args.index, keys=keys, image_size=args.image_size, video_root=args.video_root)
     steps = math.ceil(args.samples / args.batch_size)
     assert args.batch_size % args.block == 0, "batch size must be a multiple of --block"
-    sampler = EpisodeBlockSampler(ds, steps * args.batch_size, block=args.block, seed=args.seed)
-    loader = DataLoader(ds, batch_size=args.batch_size, sampler=sampler, num_workers=args.workers,
-                        persistent_workers=True, prefetch_factor=4, pin_memory=True, drop_last=True)
-    print(f"pool: {len(ds.episodes)} episodes, {len(ds)} samples; budget {args.samples} samples = {steps} steps",
-          flush=True)
 
     policy, pre, post = make_policy(args.image_size, "cuda")
     policy.train()
@@ -115,9 +112,34 @@ def main() -> None:
     print(f"trainable params {n_train / 1e6:.0f}M of {sum(p.numel() for p in policy.parameters()) / 1e6:.0f}M",
           flush=True)
 
+    # Resume from the latest checkpoint if one exists: weights, optimizer, scheduler, step, and the
+    # sampler position (the same seeded sequence, skipping what was already consumed).
+    start_step = 0
+    last = args.out / "checkpoints" / "last"
+    if (last / "training_state.pt").exists():
+        policy.load_state_dict(load_file(str(last / "pretrained_model" / "model.safetensors")), strict=True)
+        state = torch.load(last / "training_state.pt", map_location="cuda", weights_only=False)
+        optimizer.load_state_dict(state["optimizer"])
+        scheduler.load_state_dict(state["scheduler"])
+        if "torch_rng" in state:
+            torch.set_rng_state(state["torch_rng"].cpu())
+            torch.cuda.set_rng_state(state["cuda_rng"].cpu())
+        start_step = int(state["step"])
+        print(f"resumed from step {start_step}", flush=True)
+    if start_step >= steps:
+        print("already complete", flush=True)
+        return
+
+    sampler = EpisodeBlockSampler(ds, steps * args.batch_size, block=args.block, seed=args.seed,
+                                  skip=start_step * args.batch_size)
+    loader = DataLoader(ds, batch_size=args.batch_size, sampler=sampler, num_workers=args.workers,
+                        persistent_workers=True, prefetch_factor=4, pin_memory=True, drop_last=True)
+    print(f"pool: {len(ds.episodes)} episodes, {len(ds)} samples; budget {args.samples} samples = {steps} steps",
+          flush=True)
+
     args.out.mkdir(parents=True, exist_ok=True)
     log = open(args.out / "train_log.jsonl", "a")
-    t0, step, data_t = time.time(), 0, 0.0
+    t0, step, data_t = time.time(), start_step, 0.0
     t_fetch = time.time()
     for batch in loader:
         data_t += time.time() - t_fetch
@@ -135,7 +157,8 @@ def main() -> None:
             el = time.time() - t0
             rec = dict(step=step, samples=step * args.batch_size, loss=round(loss.item(), 4),
                        grad_norm=round(float(grad_norm), 3), lr=scheduler.get_last_lr()[0],
-                       samples_per_s=round(step * args.batch_size / el, 1), data_wait_frac=round(data_t / el, 3),
+                       samples_per_s=round((step - start_step) * args.batch_size / el, 1),
+                       data_wait_frac=round(data_t / el, 3),
                        mem_gb=round(torch.cuda.max_memory_allocated() / 1e9, 2))
             log.write(json.dumps(rec) + "\n")
             log.flush()

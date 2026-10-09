@@ -244,11 +244,13 @@ class EpisodeBlockSampler(Sampler[int]):
     so a block is never split across workers.
     """
 
-    def __init__(self, ds: "PoolDataset", num_samples: int, block: int = 4, seed: int = 0):
-        self.ds, self.num_samples, self.block, self.seed = ds, num_samples, block, seed
+    def __init__(self, ds: "PoolDataset", num_samples: int, block: int = 4, seed: int = 0, skip: int = 0):
+        """skip: samples already consumed (resume). The RNG is advanced exactly as in an
+        uninterrupted run, so the resumed sequence continues the original one."""
+        self.ds, self.num_samples, self.block, self.seed, self.skip = ds, num_samples, block, seed, skip
 
     def __len__(self) -> int:
-        return self.num_samples
+        return self.num_samples - self.skip
 
     def __iter__(self):
         rng = np.random.default_rng(self.seed)
@@ -260,9 +262,11 @@ class EpisodeBlockSampler(Sampler[int]):
             eps = np.searchsorted(cum, anchors, side="right") - 1
             for a, e in zip(anchors, eps):
                 start, length = int(cum[e]), int(cum[e + 1] - cum[e])
-                yield int(a)
-                for t in rng.integers(0, length, size=self.block - 1):
-                    yield start + int(t)
+                companions = rng.integers(0, length, size=self.block - 1)
+                if n >= self.skip:
+                    yield int(a)
+                    for t in companions:
+                        yield start + int(t)
                 n += self.block
                 if n >= self.num_samples:
                     return
