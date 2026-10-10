@@ -26,7 +26,7 @@ if [ ! -d "$PRE/checkpoints/last/pretrained_model" ] || ! grep -q '"step": 15625
         --keys "conditions/${COND}_seed${SEED}.parquet" \
         --out "$PRE" \
         --samples 5000000 \
-        --save-every 20000 \
+        --save-every 5000 \
         --seed "$SEED"
 fi
 
