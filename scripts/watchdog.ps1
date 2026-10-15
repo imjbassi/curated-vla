@@ -23,13 +23,14 @@ if ($Install) {
 $drive = $repo.Substring(0, 1).ToLower()
 $wslRepo = "/mnt/$drive" + ($repo.Substring(2) -replace '\\', '/')
 wsl.exe -d Ubuntu -- bash "$wslRepo/scripts/watchdog.sh"
-if ($LASTEXITCODE -eq 2) {
+$code = $LASTEXITCODE
+if ($code -eq 2) {
     # Disk error left the WSL filesystem unreadable; only a restart of the VM clears it.
     Add-Content (Join-Path $env:TEMP "curated-vla-watchdog.log") "$(Get-Date -Format s) WSL filesystem broken, restarting WSL"
     wsl.exe --shutdown
     Start-Sleep 10
 }
-if ($LASTEXITCODE -ne 0) {
+if ($code -ne 0) {
     # run_phase3.sh redirects its own output to the queue log.
     Start-Process wsl.exe -WindowStyle Hidden -ArgumentList "-d Ubuntu -- bash $wslRepo/scripts/run_phase3.sh"
 }
