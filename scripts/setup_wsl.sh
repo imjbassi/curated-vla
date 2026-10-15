@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # Phase 0: create the Python environment for curated-vla inside WSL2.
 #
-# System packages (needs sudo, run once yourself):
-#   sudo apt-get update && sudo apt-get install -y ffmpeg git-lfs
+# System packages (needs sudo, run once yourself; cmake + build-essential are needed
+# to build egl-probe, pulled in by lerobot[libero] -> hf-libero -> robomimic):
+#   sudo apt-get update && sudo apt-get install -y ffmpeg git-lfs cmake build-essential
 #
 # Everything heavy (venv, HF cache, outputs) lives on the WSL filesystem under
 # $CVLA_HOME, not on /mnt/c, which is far slower for many small files.
