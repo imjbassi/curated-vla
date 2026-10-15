@@ -22,14 +22,16 @@ if ($Install) {
 }
 $drive = $repo.Substring(0, 1).ToLower()
 $wslRepo = "/mnt/$drive" + ($repo.Substring(2) -replace '\\', '/')
-wsl.exe -d Ubuntu -- bash "$wslRepo/scripts/watchdog.sh"
-$code = $LASTEXITCODE
-if ($code -eq 2) {
-    # Disk error left the WSL filesystem unreadable; only a restart of the VM clears it.
-    Add-Content (Join-Path $env:TEMP "curated-vla-watchdog.log") "$(Get-Date -Format s) WSL filesystem broken, restarting WSL"
+# A disk error can leave the WSL filesystem unreadable (even /bin/bash fails to exec); only a
+# restart of the VM clears it. Probe with plain reads before relying on the bash health check.
+wsl.exe -d Ubuntu -- cat /bin/cp /bin/bash /usr/bin/python3 | Out-Null
+if ($LASTEXITCODE -ne 0) {
+    Add-Content (Join-Path $env:TEMP "curated-vla-watchdog.log") "$(Get-Date -Format s) WSL filesystem broken (exit $LASTEXITCODE), restarting WSL"
     wsl.exe --shutdown
     Start-Sleep 10
 }
+wsl.exe -d Ubuntu -- bash "$wslRepo/scripts/watchdog.sh"
+$code = $LASTEXITCODE
 if ($code -ne 0) {
     # run_phase3.sh redirects its own output to the queue log.
     Start-Process wsl.exe -WindowStyle Hidden -ArgumentList "-d Ubuntu -- bash $wslRepo/scripts/run_phase3.sh"
