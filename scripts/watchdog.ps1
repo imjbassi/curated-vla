@@ -1,20 +1,29 @@
-# Keep WSL alive and the Phase 3 queue running. Registered as a scheduled task that
-# runs every 5 minutes by: powershell -File scripts\watchdog.ps1 -Install
-# (schtasks works without elevation; Register-ScheduledTask was denied here.)
+# Keep the Phase 3 queue running. A scheduled task runs this every 5 minutes; install with
+#     powershell -File scripts\watchdog.ps1 -Install
+# If the queue is not running (WSL shut down, reboot, crash), it is relaunched inside a hidden
+# wsl.exe that stays alive for the queue's lifetime, which also keeps the distro from being
+# shut down. Every stage of the queue resumes from its last checkpoint.
 param([switch]$Install)
+$task = "curated-vla-watchdog"
 $repo = Split-Path $PSScriptRoot -Parent
 if ($Install) {
-    schtasks.exe /Create /F /TN curated-vla-watchdog /SC MINUTE /MO 5 `
-        /TR "powershell.exe -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File \`"$PSCommandPath\`""
+    # schtasks works without elevation (Register-ScheduledTask was denied here). Its default
+    # 3-day execution limit would kill the queue's wsl.exe, so clear it through the task XML.
+    schtasks.exe /Create /F /TN $task /SC MINUTE /MO 5 `
+        /TR "powershell.exe -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File \`"$PSCommandPath`"" | Out-Null
+    $xml = (schtasks.exe /Query /TN $task /XML) -join "`n"
+    $xml = $xml -replace '\s*<ExecutionTimeLimit>[^<]*</ExecutionTimeLimit>', ''
+    $xml = $xml -replace '<Settings>', "<Settings>`n    <ExecutionTimeLimit>PT0S</ExecutionTimeLimit>"
+    $tmp = Join-Path $env:TEMP "$task.xml"
+    [IO.File]::WriteAllText($tmp, $xml, (New-Object Text.UnicodeEncoding))
+    schtasks.exe /Create /F /TN $task /XML $tmp
+    Remove-Item $tmp
     return
 }
-# WSL shuts the distro down when no Windows process holds it open.
-$alive = Get-CimInstance Win32_Process -Filter "Name='wsl.exe'" |
-    Where-Object { $_.CommandLine -like "*sleep infinity*" }
-if (-not $alive) {
-    Start-Process wsl.exe -ArgumentList '-d','Ubuntu','--','sleep','infinity' -WindowStyle Hidden
-    Start-Sleep 5
-}
-$drive = $repo.Substring(0,1).ToLower()
-$wslRepo = "/mnt/$drive" + ($repo.Substring(2) -replace '\\','/')
+$drive = $repo.Substring(0, 1).ToLower()
+$wslRepo = "/mnt/$drive" + ($repo.Substring(2) -replace '\\', '/')
 wsl.exe -d Ubuntu -- bash "$wslRepo/scripts/watchdog.sh"
+if ($LASTEXITCODE -ne 0) {
+    # run_phase3.sh redirects its own output to the queue log.
+    Start-Process wsl.exe -WindowStyle Hidden -ArgumentList "-d Ubuntu -- bash $wslRepo/scripts/run_phase3.sh"
+}
