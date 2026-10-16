@@ -64,7 +64,10 @@ def _duration(video: str) -> float:
     return int(packets) * int(den) / int(num)
 
 
-def extract_subset(source: str, subset: str, episodes: list[int], out_root: Path, n_frames: int = 3) -> int:
+def extract_subset(source: str, subset: str, episodes: list[int], out_root: Path, n_frames: int = 3,
+                   cached: bool = False) -> int:
+    """`cached`: per-episode videos are read from (and kept in) the HF cache instead of being
+    streamed to a temp dir and deleted; use when the videos are already local (scripts/rebuild_pool.py)."""
     pos = positions(n_frames)
     src = BY_NAME[source]
     prefix = f"{subset}/" if subset else ""
@@ -87,11 +90,13 @@ def extract_subset(source: str, subset: str, episodes: list[int], out_root: Path
                 rel = info["video_path"].format(episode_chunk=ep // info.get("chunks_size", 1000), video_key=key,
                                                 episode_index=ep)
                 with tempfile.TemporaryDirectory() as tmp:
-                    video = hf_hub_download(src.repo_id, prefix + rel, repo_type="dataset", local_dir=tmp)
+                    video = hf_hub_download(src.repo_id, prefix + rel, repo_type="dataset",
+                                            local_dir=None if cached else tmp)
                     dur = _duration(video)
                     for name, frac in pos.items():
                         _grab(video, min(frac * dur, dur - 0.1), targets[name])
-                    os.remove(video)
+                    if not cached:
+                        os.remove(video)
             else:
                 m = meta.loc[ep]
                 rel = info["video_path"].format(video_key=key, chunk_index=int(m[f"videos/{key}/chunk_index"]),
@@ -114,6 +119,7 @@ def main() -> None:
     parser.add_argument("--sources", nargs="*")
     parser.add_argument("--shard", default="0/1", help="i/n: process every n-th sub-dataset starting at i")
     parser.add_argument("--n-frames", type=int, default=3, help="3 = first/mid/last; otherwise evenly spaced f0..")
+    parser.add_argument("--cached", action="store_true", help="videos are already in the HF cache; read them there")
     args = parser.parse_args()
     shard_i, shard_n = map(int, args.shard.split("/"))
     df = pd.read_parquet(args.scores, columns=["source", "subset", "episode_index"])
@@ -124,7 +130,8 @@ def main() -> None:
         if k % shard_n != shard_i:
             continue
         try:
-            n = extract_subset(source, subset, sorted(g["episode_index"].tolist()), args.out, args.n_frames)
+            n = extract_subset(source, subset, sorted(g["episode_index"].tolist()), args.out, args.n_frames,
+                               cached=args.cached)
             print(f"{source}/{subset or '_'}: {n} episodes", flush=True)
         except Exception as e:  # one broken sub-dataset should not stop the run
             print(f"FAILED {source}/{subset or '_'}: {type(e).__name__}: {str(e)[:200]}", flush=True)
