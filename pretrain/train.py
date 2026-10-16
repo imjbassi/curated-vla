@@ -59,6 +59,8 @@ def make_policy(image_size: int, device: str) -> tuple[SmolVLAPolicy, object, ob
 
 
 def save(out: Path, step: int, policy, pre, post, optimizer, scheduler, args) -> None:
+    """Write checkpoints/<step>, point `last` at it, and prune: keep every --keep-every steps plus
+    the two most recent (a checkpoint is ~1.3 GB; saving every 1000 steps filled 100 GB in a day)."""
     ckpt = out / "checkpoints" / f"{step:07d}"
     model_dir = ckpt / "pretrained_model"
     policy.save_pretrained(model_dir)
@@ -72,6 +74,11 @@ def save(out: Path, step: int, policy, pre, post, optimizer, scheduler, args) ->
     if last.is_symlink() or last.exists():
         last.unlink()
     last.symlink_to(ckpt.name)
+    import shutil
+    steps_saved = sorted(int(p.name) for p in ckpt.parent.iterdir() if p.name.isdigit())
+    for s in steps_saved[:-2]:
+        if s % args.keep_every != 0:
+            shutil.rmtree(ckpt.parent / f"{s:07d}")
 
 
 def main() -> None:
@@ -87,6 +94,7 @@ def main() -> None:
                         help="frames per episode visit; 4 keeps the GPU fed on the full pool (pretrain/bench.py)")
     parser.add_argument("--image-size", type=int, default=256)
     parser.add_argument("--save-every", type=int, default=5000, help="steps")
+    parser.add_argument("--keep-every", type=int, default=20000, help="steps; other checkpoints are pruned except the last two")
     parser.add_argument("--log-every", type=int, default=50)
     parser.add_argument("--seed", type=int, default=1000)
     args = parser.parse_args()
