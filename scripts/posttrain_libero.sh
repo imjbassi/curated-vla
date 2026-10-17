@@ -35,10 +35,16 @@ RENAME='{"observation.images.image": "observation.images.camera1", "observation.
 OUT="$CVLA_HOME/outputs/posttrain/${NAME}_seed${SEED}"
 mkdir -p "$(dirname "$OUT")"
 
-if [ -d "$OUT/checkpoints/last/pretrained_model" ] && [ -d "$OUT/checkpoints/$(printf '%06d' "$STEPS")" ]; then
+LAST="$OUT/checkpoints/last/pretrained_model"
+if [ -d "$LAST" ] && [ -d "$OUT/checkpoints/$(printf '%06d' "$STEPS")" ]; then
     echo "post-training already done: $OUT"
+elif [ -f "$LAST/train_config.json" ]; then
+    # Interrupted run (WSL restart, crash): resume from the last checkpoint. Cost of an
+    # interruption is at most SAVE_FREQ steps instead of the whole stage.
+    echo "resuming post-training from $(readlink "$OUT/checkpoints/last")"
+    lerobot-train --config_path="$LAST/train_config.json" --resume=true 2>&1 | tee -a "$OUT.log"
 else
-rm -rf "$OUT"  # lerobot-train refuses an existing output dir; a partial run restarts
+rm -rf "$OUT"  # lerobot-train refuses an existing output dir without --resume
 lerobot-train \
     --policy.path="$BASE_POLICY" \
     --policy.push_to_hub=false \
@@ -48,13 +54,17 @@ lerobot-train \
     --rename_map="$RENAME" \
     --batch_size="$BATCH_SIZE" \
     --steps="$STEPS" \
-    --save_freq="${SAVE_FREQ:-10000}" \
+    --save_freq="${SAVE_FREQ:-5000}" \
     --log_freq=200 \
     --num_workers=8 \
     --wandb.enable=false \
     --seed="$SEED" \
     --output_dir="$OUT" \
     2>&1 | tee "$OUT.log"
+fi
+# Keep only the final checkpoint (~3 GB each; the intermediate ones only exist for resuming).
+if [ -d "$OUT/checkpoints/$(printf '%06d' "$STEPS")" ]; then
+    find "$OUT/checkpoints" -mindepth 1 -maxdepth 1 -type d ! -name "$(printf '%06d' "$STEPS")" -exec rm -rf {} +
 fi
 
 CKPT="$OUT/checkpoints/last/pretrained_model"

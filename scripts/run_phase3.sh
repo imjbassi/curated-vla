@@ -11,8 +11,17 @@ LOGS="${CVLA_HOME:-$HOME/cvla}/outputs"
 exec >> "$LOGS/phase3_queue.log" 2>&1
 for seed in 1000 1001 1002; do
     for cond in A_random B_curated; do
-        echo "$(date '+%F %T') start ${cond}_seed${seed}"
-        bash "$HERE/run_condition.sh" "$cond" "$seed" > "$LOGS/phase3_${cond}_seed${seed}.log" 2>&1
-        echo "$(date '+%F %T') end ${cond}_seed${seed} (exit $?)"
+        # A failed stage (crash, WSL restart) is retried on the same model; every stage resumes
+        # from its last checkpoint, so a retry only redoes the tail. Never skip to the next model.
+        for attempt in 1 2 3 4 5; do
+            echo "$(date '+%F %T') start ${cond}_seed${seed} (attempt $attempt)"
+            if bash "$HERE/run_condition.sh" "$cond" "$seed" >> "$LOGS/phase3_${cond}_seed${seed}.log" 2>&1; then
+                echo "$(date '+%F %T') end ${cond}_seed${seed}"
+                break
+            fi
+            echo "$(date '+%F %T') ${cond}_seed${seed} failed (attempt $attempt), see phase3_${cond}_seed${seed}.log"
+            [ $attempt -eq 5 ] && { echo "giving up on ${cond}_seed${seed}"; exit 1; }
+            sleep 60
+        done
     done
 done
